@@ -1,4 +1,5 @@
-import { Injectable, signal, WritableSignal, computed, Signal } from '@angular/core';
+import { effect, Injectable, signal, Signal, WritableSignal } from '@angular/core';
+import { IExercise } from '@models/exercise.model';
 import { IProfile } from '@models/user.model';
 import { createClient, Session, SupabaseClient, User } from '@supabase/supabase-js';
 
@@ -15,6 +16,11 @@ export class SupabaseService {
 
   private _isSessionLoaded: WritableSignal<boolean> = signal(false);
   readonly isSessionLoaded: Signal<boolean> = this._isSessionLoaded.asReadonly();
+
+  private _exercises: WritableSignal<IExercise[]> = signal([]);
+  readonly exercises: Signal<IExercise[]> = this._exercises.asReadonly();
+
+  private _exercisesLoaded: WritableSignal<boolean> = signal(false);
 
   constructor() {
     this.supabase = createClient(this.supabaseUrl, this.supabaseKey, {
@@ -36,6 +42,13 @@ export class SupabaseService {
 
     // Load the initial session
     this.loadSession();
+
+    effect(() => {
+      if (this.session() && this.isSessionLoaded() && !this._exercisesLoaded()) {
+        this.fetchExercises();
+        this._exercisesLoaded.set(true);
+      }
+    });
   }
 
   async loadSession() {
@@ -43,6 +56,19 @@ export class SupabaseService {
     this._session.set(data.session);
     // Mark session as loaded after initial load
     this._isSessionLoaded.set(true);
+  }
+
+  async fetchExercises() {
+    try {
+      const { data, error } = await this.supabase.from('exercises').select('*');
+      if (error) {
+        throw error;
+      }
+      this._exercises.set(data || []);
+    } catch (error) {
+      console.error('Error fetching exercises:', error);
+      this._exercises.set([]);
+    }
   }
 
   profile(user: User) {

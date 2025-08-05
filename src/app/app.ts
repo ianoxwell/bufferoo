@@ -1,30 +1,38 @@
 import { Component, signal, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { SupabaseService } from '@app/supabase.service';
-import { Account } from '@pages/account/account';
-import { Auth } from '@pages/auth/auth';
-import { Session } from '@supabase/supabase-js';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { SupabaseService } from './app/supabase.service';
+import { BottomToolbarComponent } from './components/bottom-toolbar/bottom-toolbar';
+import { CommonModule } from '@angular/common';
+import { filter, map } from 'rxjs/operators';
+import { protectedRoutes } from './app.routes';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Auth, Account],
+  imports: [RouterOutlet, BottomToolbarComponent, CommonModule],
   templateUrl: './app.html',
-  styleUrl: './app.css',
+  styleUrl: './app.scss',
 })
 export class App implements OnInit {
   protected readonly title = signal('bufferoo');
-  session: Session | null = null;
+  protected showToolbar = signal(false);
 
-  constructor(private readonly supabaseService: SupabaseService) {}
+  constructor(private router: Router) {}
 
-  async ngOnInit() {
-    console.log('Initializing app...');
-    // Initialize session properly
-    this.session = await this.supabaseService.getSession();
-    
-    // Listen for auth changes
-    this.supabaseService.authChanges((_, session) => {
-      this.session = session;
-    });
+  ngOnInit() {
+    this.routerEvents().subscribe();
+  }
+
+  routerEvents() {
+    return this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event: NavigationEnd) => {
+        // check the current URL and strip any leading slash
+        const url = event.urlAfterRedirects.startsWith('/')
+          ? event.urlAfterRedirects.slice(1)
+          : event.urlAfterRedirects;
+        this.showToolbar.set(protectedRoutes.some((route) => url.startsWith(route)));
+        return url;
+      })
+    );
   }
 }

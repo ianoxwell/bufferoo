@@ -1,10 +1,9 @@
 <main class="main">
   <div class="content">
-    @if (session !== null) {
-    <app-account [session]="session"></app-account>
-    } @else {
-    <app-auth></app-auth>
-    }
     <router-outlet />
   </div>
 </main>
+
+@if (showToolbar()) {
+  <app-bottom-toolbar />
+}

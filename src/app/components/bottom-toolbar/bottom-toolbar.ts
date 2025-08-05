@@ -5,7 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { SupabaseService } from '@app/supabase.service';
+import { SupabaseService } from 'src/app/services/supabase.service';
+import { AppStore } from 'src/app/app.store';
 
 @Component({
   selector: 'app-bottom-toolbar',
@@ -30,9 +31,9 @@ export class BottomToolbarComponent {
     { label: 'Workouts', icon: 'fitness_center', route: '/workout' },
   ];
 
-  constructor(private supabaseService: SupabaseService, private router: Router) {
+  constructor(private readonly supabaseService: SupabaseService, private readonly appStore: AppStore, private router: Router) {
     effect(async () => {
-      const session = this.supabaseService.session();
+      const session = this.appStore.session();
       if (session?.user) {
         const { data, error } = await this.supabaseService.profile(session.user);
         if (error) {

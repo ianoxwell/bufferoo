@@ -1,15 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { SupabaseService } from '@app/supabase.service';
+import { SupabaseService } from 'src/app/services/supabase.service';
+import { AppStore } from 'src/app/app.store';
 
 @Component({
   selector: 'app-auth',
@@ -21,12 +17,16 @@ export class Auth implements OnInit {
   signInForm: FormGroup;
   loading = false;
 
-  constructor(private readonly supabaseService: SupabaseService, private readonly router: Router) {
+  constructor(
+    private readonly supabaseService: SupabaseService,
+    private readonly appStore: AppStore,
+    private readonly router: Router
+  ) {
     this.signInForm = this.createForm();
   }
 
   ngOnInit(): void {
-    if (this.supabaseService.session()) {
+    if (this.appStore.session()) {
       this.router.navigate(['/dashboard']);
     }
   }

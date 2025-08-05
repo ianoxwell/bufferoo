@@ -1,6 +1,6 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
-import { SupabaseService } from './app/supabase.service';
+import { AuthService } from './services/auth.service';
 import { BottomToolbarComponent } from './components/bottom-toolbar/bottom-toolbar';
 import { CommonModule } from '@angular/common';
 import { filter, map } from 'rxjs/operators';
@@ -16,10 +16,11 @@ export class App implements OnInit {
   protected readonly title = signal('bufferoo');
   protected showToolbar = signal(false);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
     this.routerEvents().subscribe();
+    this.authService.initializeAuth();
   }
 
   routerEvents() {

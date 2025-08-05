@@ -1,20 +1,20 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { SupabaseService } from '@app/supabase.service';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { filter, map, first } from 'rxjs/operators';
+import { CanActivateFn, Router } from '@angular/router';
+import { filter, first, map } from 'rxjs/operators';
+import { AppStore } from '../app.store';
 
 export const authGuard: CanActivateFn = () => {
-  const supabase = inject(SupabaseService);
+  const appStore = inject(AppStore);
   const router = inject(Router);
 
-  const isSessionLoaded$ = toObservable(supabase.isSessionLoaded);
+  const isSessionLoaded$ = toObservable(appStore.isSessionLoaded);
 
   return isSessionLoaded$.pipe(
     filter(isLoaded => isLoaded),
     first(),
     map(() => {
-      const session = supabase.session();
+      const session = appStore.session();
       console.log('AuthGuard checking session (after loaded):', session);
       if (session) {
         return true;

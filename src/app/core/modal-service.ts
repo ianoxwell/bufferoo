@@ -1,16 +1,21 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmModalComponent } from '@components/modals/confirm-modal/confirm-modal';
 import { EMessageStatus, ICreateDialogInput, IDialogText } from '@models/dialog.model';
-import { BehaviorSubject, Observable, switchMap, take, tap, timer } from 'rxjs';
+import { Observable, switchMap, take, tap, timer, firstValueFrom } from 'rxjs';
 import { getAnimationDuration } from './animation';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModalService {
   private readonly dialog = inject(MatDialog);
-  private isDialogOpen$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  // Convert to signal for reactive state
+  private readonly _isDialogOpen = signal(false);
+  readonly isDialogOpen = this._isDialogOpen.asReadonly();
+
   private readonly animationTotalDelay: number;
   private readonly animationInLength: number;
   private readonly animationOutLength: number;
@@ -21,19 +26,40 @@ export class ModalService {
   }
 
   /**
-   * Opens Material UI dialog boxes with given parameters, second type
+   * Opens Material UI dialog boxes with given parameters
    * @template {T} T The return type.
    * @template {DT} DT the data type for the dialog component.
-   * @returns a generic observable of input T.
+   * @returns a Promise with the dialog result.
    */
-  createDialog<T, DT>(dialogDetails: ICreateDialogInput<DT>): Observable<T> {
+  async createDialog<T, DT>(dialogDetails: ICreateDialogInput<DT>): Promise<T> {
+    const options: MatDialogConfig = this.createDialogOptions<DT>(dialogDetails);
+    const dialogRef = this.dialog.open(dialogDetails.component, options);
+
+    // Update signal when dialog opens
+    await firstValueFrom(dialogRef.afterOpened());
+    this._isDialogOpen.set(this.isDialogCurrentlyOpen());
+
+    // Wait for dialog to close and get result
+    const result = await firstValueFrom(dialogRef.afterClosed());
+
+    // Delay before updating signal to account for animations
+    this.delayDialogOpenCheck();
+
+    return result;
+  }
+
+  /**
+   * Legacy Observable version for backward compatibility
+   * @deprecated Use createDialog (Promise version) instead
+   */
+  createDialogObservable<T, DT>(dialogDetails: ICreateDialogInput<DT>): Observable<T> {
     const options: MatDialogConfig = this.createDialogOptions<DT>(dialogDetails);
     const dialogRef = this.dialog.open(dialogDetails.component, options);
 
     return dialogRef.afterOpened().pipe(
       take(1),
       switchMap(() => {
-        this.isDialogOpen$.next(this.isDialogCurrentlyOpen());
+        this._isDialogOpen.set(this.isDialogCurrentlyOpen());
         return dialogRef.afterClosed();
       }),
       take(1),
@@ -70,7 +96,7 @@ export class ModalService {
 
   delayDialogOpenCheck(): void {
     timer(this.animationTotalDelay)
-      .pipe(tap(() => this.isDialogOpen$.next(this.isDialogCurrentlyOpen())))
+      .pipe(tap(() => this._isDialogOpen.set(this.isDialogCurrentlyOpen())))
       .subscribe();
   }
 
@@ -79,8 +105,23 @@ export class ModalService {
     return !!this.dialog.openDialogs.length;
   }
 
+  /**
+   * Get dialog open state as signal (reactive)
+   * @returns ReadonlySignal<boolean>
+   */
+  getIsDialogOpenSignal() {
+    return this.isDialogOpen;
+  }
+
+  /**
+   * @deprecated Use getIsDialogOpenSignal() instead for reactive state
+   */
   getIsDialogOpen(): Observable<boolean> {
-    return this.isDialogOpen$.asObservable();
+    // Simple implementation - just emit current value and complete
+    return new Observable((subscriber) => {
+      subscriber.next(this.isDialogOpen());
+      subscriber.complete();
+    });
   }
 
   /** Closes all open dialogs. */
@@ -99,13 +140,13 @@ export class ModalService {
   }
 
   /** Opens a confirm dialog */
-  confirm(
+  async confirm(
     status: EMessageStatus,
     title: string,
     message: string,
     isAlert = false,
     buttonText = 'Confirm'
-  ): Observable<boolean> {
+  ): Promise<boolean> {
     const data = { status, title, message, buttonText, isAlert };
     const options: ICreateDialogInput<IDialogText> = {
       id: 'confirmationDialog',
@@ -117,10 +158,17 @@ export class ModalService {
   }
 
   /** Opens an alert dialog */
-  // alert(heading: string, err: any, confirmButton = 'Okay'): Observable<void> {
-  //   // if error message if of type HttpErrorResponse then it will have a message
-  //   const message = !!err.message ? err.message : err;
-  //   const data = { status: MessageStatus.Error, heading, message, confirmButton };
-  //   return this.createDialog<void>(data, ConfirmDialogComponent);
-  // }
+  alert(title: string, err: string | HttpErrorResponse, confirmButton = 'Okay'): Promise<void> {
+    // if error message if of type HttpErrorResponse then it will have a message
+    const message =
+      typeof err === 'string' ? err : Object.hasOwn(err, 'message') ? err.message : 'Oops and unknown error occurred';
+    const data = { status: EMessageStatus.Error, title, message, confirmButton, isAlert: true };
+    const options: ICreateDialogInput<IDialogText> = {
+      id: 'confirmationDialog',
+      data,
+      component: ConfirmModalComponent,
+      maxWidth: '60rem',
+    };
+    return this.createDialog<void, IDialogText>(options);
+  }
 }

@@ -1,0 +1,48 @@
+<div class="dialog-header">
+  <h1 [ngClass]="data.status">{{ data.title }}</h1>
+  @if (!disableClose) {
+  <button
+    type="button"
+    mat-flat-button
+    [attr.aria-label]="data.cancelText ? data.cancelText : 'close' + ' ' + data.title"
+    cdkFocusInitial
+    id="close-dialog-button"
+    (action)="dismissDialog()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+  }
+</div>
+
+<mat-dialog-content role="main">
+  @if (data.message) {
+  <div [innerHtml]="data.message | safeHtml"></div>
+  }
+</mat-dialog-content>
+
+<footer class="dialog-confirm-actions" [ngClass]="{ 'action-is-mobile': data.isMobile, 'confirm-row': data.isAlert }">
+  @if (data.isCancelVisible) {
+  <button
+    mat-stroked-button
+    type="button"
+    id="cancel-dialog-button"
+    [attr.aria-label]="data.cancelText ? data.cancelText : 'Cancel' + ' ' + data.title"
+    (click)="onConfirmationSelected(false)"
+    title="{{ data.cancelText || 'Cancel' }}"
+  >
+    <span>{{ data.cancelText || "Cancel" }}</span>
+  </button>
+  }
+
+  <button
+    mat-stroked-button
+    type="button"
+    id="confirm-button"
+    [attr.aria-label]="data.message"
+    title="{{ data.confirmText || 'Confirm' }}"
+    [ngClass]="data.status"
+    (click)="onConfirmationSelected(true)"
+    cdkFocusInitial
+    [innerHtml]="data.confirmText || 'Confirm'"
+  ></button>
+</footer>

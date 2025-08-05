@@ -1,10 +1,10 @@
-import { Component, signal, OnInit } from '@angular/core';
-import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
-import { AuthService } from './common/auth.service';
-import { BottomToolbarComponent } from './components/bottom-toolbar/bottom-toolbar';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { protectedRoutes } from './app.routes';
+import { BottomToolbarComponent } from './components/bottom-toolbar/bottom-toolbar';
+import { AuthService } from '@core/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +13,9 @@ import { protectedRoutes } from './app.routes';
   styleUrl: './app.scss',
 })
 export class App implements OnInit {
-  protected readonly title = signal('bufferoo');
+  private router = inject(Router);
+  private authService = inject(AuthService);
   protected showToolbar = signal(false);
-
-  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
     this.routerEvents().subscribe();

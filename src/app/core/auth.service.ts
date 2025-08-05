@@ -1,16 +1,16 @@
-import { Injectable, effect } from '@angular/core';
-import { SupabaseService } from 'src/app/common/supabase.service';
+import { Injectable, effect, inject } from '@angular/core';
 import { AppStore } from '../app.store';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
+import { SupabaseService } from './supabase.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(
-    private readonly supabaseService: SupabaseService,
-    private readonly appStore: AppStore
-  ) {
+  private readonly supabaseService = inject(SupabaseService);
+  private readonly appStore = inject(AppStore);
+
+  constructor() {
     // Effect to fetch exercises when session is available
     effect(() => {
       if (this.appStore.session() && this.appStore.isSessionLoaded() && !this.appStore.exercisesLoaded()) {

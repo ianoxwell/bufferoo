@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, signal, WritableSignal } from '@angular/core';
+import { Component, effect, signal, WritableSignal, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { SupabaseService } from 'src/app/common/supabase.service';
+import { SupabaseService } from '@core/supabase.service';
 import { AppStore } from 'src/app/app.store';
 
 @Component({
@@ -24,6 +24,9 @@ import { AppStore } from 'src/app/app.store';
   styleUrl: './bottom-toolbar.scss',
 })
 export class BottomToolbarComponent {
+  private readonly supabaseService = inject(SupabaseService);
+  private readonly appStore = inject(AppStore);
+  private readonly router = inject(Router);
   protected user: WritableSignal<{ username: string | null; avatar_url: string | null } | null> = signal(null);
   navigationMenu = [
     { label: 'Home', icon: 'home', route: '/dashboard' },
@@ -31,7 +34,7 @@ export class BottomToolbarComponent {
     { label: 'Workouts', icon: 'fitness_center', route: '/workout' },
   ];
 
-  constructor(private readonly supabaseService: SupabaseService, private readonly appStore: AppStore, private router: Router) {
+  constructor() {
     effect(async () => {
       const session = this.appStore.session();
       if (session?.user) {

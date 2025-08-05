@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { SupabaseService } from 'src/app/common/supabase.service';
+import { SupabaseService } from '@core/supabase.service';
 import { IProfile } from '@models/user.model';
 import { AppStore } from 'src/app/app.store';
 
@@ -15,12 +15,14 @@ import { AppStore } from 'src/app/app.store';
   styleUrl: './account.css',
 })
 export class Account implements OnInit {
+  router = inject(Router);
+  supabaseService = inject(SupabaseService);
+  appStore = inject(AppStore);
   loading = false;
   profile!: IProfile;
   updateProfileForm: FormGroup;
-  router = inject(Router);
 
-  constructor(private readonly supabaseService: SupabaseService, private readonly appStore: AppStore) {
+  constructor() {
     this.updateProfileForm = this.createForm();
   }
 

@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { SupabaseService } from 'src/app/common/supabase.service';
+import { SupabaseService } from '@core/supabase.service';
 import { AppStore } from 'src/app/app.store';
 
 @Component({
@@ -14,14 +14,13 @@ import { AppStore } from 'src/app/app.store';
   styleUrl: './auth.css',
 })
 export class Auth implements OnInit {
+  private readonly supabaseService = inject(SupabaseService);
+  private readonly appStore = inject(AppStore);
+  private readonly router = inject(Router);
   signInForm: FormGroup;
   loading = false;
 
-  constructor(
-    private readonly supabaseService: SupabaseService,
-    private readonly appStore: AppStore,
-    private readonly router: Router
-  ) {
+  constructor() {
     this.signInForm = this.createForm();
   }
 

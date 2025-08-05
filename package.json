@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "start:test": "ng serve --port 42061 --configuration test",
+    "lint": "ng lint --max-warnings=0",
+    "lint:fix": "ng lint --fix"
   },
   "prettier": {
     "printWidth": 120,

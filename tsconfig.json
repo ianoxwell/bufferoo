@@ -13,14 +13,16 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": ["src/app/app/*"],
+      "@components/*": ["src/app/components/*"],
+      "@models/*": ["src/app/models/*"],
+      "@pages/*": ["src/app/pages/*"]
+    }
   },
-  "paths": {
-    "@app/*": ["src/app/app/*"],
-    "@components/*": ["src/app/components/*"],
-    "@models/*": ["src/app/models/*"],
-    "@pages/*": ["src/app/pages/*"]
-  },
+
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

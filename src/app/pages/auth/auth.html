@@ -1,0 +1,16 @@
+<section class="auth-page">
+  <div class="auth-container">
+    <h1>Welcome to Bufferoo</h1>
+    <p class="description">Sign in via magic link with your email below</p>
+    <form [formGroup]="signInForm" (keyup.enter)="onSubmit()" (ngSubmit)="onSubmit()">
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput required type="email" formControlName="email" placeholder="Your email" />
+        @if (signInForm.get('email')?.hasError('required') && signInForm.get('email')?.touched) {
+        <mat-error> Email is required </mat-error>
+        }
+      </mat-form-field>
+      <button type="submit" matButton="filled" [disabled]="loading">Login</button>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,23 @@
+<form [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()" class="form-widget">
+  <!-- <app-avatar [avatarUrl]="this.avatarUrl" (upload)="updateAvatar($event)"> </app-avatar> -->
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Email</mat-label>
+    <input matInput id="email" type="text" [value]="session.user.email" disabled />
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="username" id="username" type="text" />
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Website</mat-label>
+    <input matInput formControlName="website" id="website" type="url" />
+  </mat-form-field>
+  <div>
+    <button mat-raised-button color="primary" class="block" type="submit" [disabled]="loading">
+      {{ loading ? "Loading ..." : "Update" }}
+    </button>
+  </div>
+  <div>
+    <button mat-button class="block" (click)="signOut()">Sign Out</button>
+  </div>
+</form>

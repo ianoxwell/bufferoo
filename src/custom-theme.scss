@@ -1,31 +1,23 @@
-
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
-@use '@angular/material' as mat;
-
-// 🎨 Material 3 Color System
-// Define your brand colors using Material 3 color tokens
-$bufferoo-theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$orange-palette,
-    tertiary: mat.$green-palette,
-  ),
-  typography: (
-    brand-family: 'Roboto',
-    plain-family: 'Roboto',
-  ),
-  density: (
-    scale: 0,
-  )
-));
+@use "@angular/material" as mat;
 
 html {
-  @include mat.core();
-  @include mat.theme($bufferoo-theme);
+  // @include mat.core();
+  @include mat.theme(
+    (
+      color: (
+        theme-type: light,
+        primary: mat.$orange-palette,
+        tertiary: mat.$green-palette,
+      ),
+      typography: (
+        brand-family: "Roboto",
+        plain-family: "Roboto",
+      ),
+      density: (
+        scale: 0,
+      ),
+    )
+  );
 }
 
 body {

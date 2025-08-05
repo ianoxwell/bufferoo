@@ -16,7 +16,7 @@
     "module": "preserve",
     "baseUrl": "./",
     "paths": {
-      "@app/*": ["src/app/app/*"],
+      "@common/*": ["src/app/common/*"],
       "@components/*": ["src/app/components/*"],
       "@models/*": ["src/app/models/*"],
       "@pages/*": ["src/app/pages/*"]

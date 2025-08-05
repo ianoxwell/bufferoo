@@ -1,5 +1,5 @@
 import { Injectable, effect } from '@angular/core';
-import { SupabaseService } from 'src/app/services/supabase.service';
+import { SupabaseService } from 'src/app/common/supabase.service';
 import { AppStore } from '../app.store';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 

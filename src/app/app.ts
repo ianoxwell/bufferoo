@@ -1,6 +1,6 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './common/auth.service';
 import { BottomToolbarComponent } from './components/bottom-toolbar/bottom-toolbar';
 import { CommonModule } from '@angular/common';
 import { filter, map } from 'rxjs/operators';

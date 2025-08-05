@@ -13,7 +13,7 @@
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: var(--mat-sys-on-surface);
+    color: var(--mat-sys-on-surface) !important;
     font-size: 0.875rem;
     padding: 8px;
     border-radius: 0;
@@ -32,7 +32,7 @@
   }
 
   .active-link {
-    color: var(--mat-sys-primary);
+    color: var(--mat-sys-primary) !important;
     border-top-color: var(--mat-sys-primary);
   }
 

@@ -1,7 +1,6 @@
 @use "@angular/material" as mat;
 
 html {
-  // @include mat.core();
   @include mat.theme(
     (
       color: (

@@ -1,59 +1,99 @@
-# Bufferoo
+# 🦘 Bufferoo – The Aussie Gym Journal
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.4.
+**Bufferoo** is a clean, fast, web-based workout tracker built with a strong focus on usability, accessibility, and simplicity. Inspired by the structure and flow of apps like [strong.app](https://strong.app), Bufferoo helps you plan, execute, and track your workouts—without the clutter.
 
-## Development server
+Whether you're lifting heavy or just getting started, Bufferoo keeps your progress front and center.
 
-To start a local development server, run:
+---
+
+## 🔧 Tech Stack
+
+| Layer        | Tech                       |
+|--------------|----------------------------|
+| **Frontend** | [Angular 20](https://angular.io/), [Angular Material](https://material.angular.io/) |
+| **Auth + DB**| [Supabase](https://supabase.com/) (Postgres, Auth, Storage) |
+| **API**      | Supabase [GraphQL](https://supabase.com/docs/guides/api/graphql) |
+| **Hosting**  | [Vercel](https://vercel.com/) |
+
+---
+
+## 🎯 Features (Work in Progress)
+
+- 🗂 **Workout Templates**  
+  Plan your workouts using a searchable list of exercises, grouped by category.
+
+- 🔁 **Weekly Scheduling**  
+  Assign workouts to days of the week with repeat options (e.g., UpperBody on Mondays).
+
+- 🏋️ **Drag-and-Drop Workout Planner**  
+  Reorder your exercise list effortlessly using Angular CDK drag/drop.
+
+- ✅ **Smart Exercise Tracking**  
+  Pre-fills your last used weights & reps, tracks sets during workouts, and allows exercise substitutions on the fly.
+
+- 📈 **History & Progress**  
+  Weekly overview and individual exercise history, visualized with bar charts.
+
+- ♿ **Accessible UI**  
+  Built using WCAG-compliant color schemes and Angular Material’s accessible components.
+
+---
+
+## 🚀 Project Status
+
+Bufferoo is a **fast build in progress**, developed as part of a frontend-focused demo project. It serves as both a personal tool and a public portfolio project showcasing:
+
+- Component-driven Angular development
+- Scalable architecture
+- Responsive, WCAG-friendly UI design
+- Integration with GraphQL APIs and Supabase Auth
+- Use of JSONB in Postgres for flexible data storage
+
+A full roadmap is in place for upcoming features, including:
+
+- Dark mode
+- Social workout sharing
+- Set timers and rest periods
+- Import/export workout data
+- PWA support
+
+---
+
+## 💡 Roadmap Preview
+
+- [ ] User-specific exercise library
+- [ ] Exercise substitution suggestions based on muscle group
+- [ ] Deep analytics (volume tracking, PRs)
+- [ ] Drag-to-complete workout calendar
+- [ ] Mobile-friendly UI optimizations
+- [ ] Auto sync to localStorage / offline mode
+
+---
+
+## 📸 Screenshots (coming soon)
+
+> Featuring a bold UI, accessible fonts and colors, and a buff kangaroo logo with serious attitude.
+
+---
+
+## 🧠 Why Bufferoo?
+
+Bufferoo combines the structure of modern gym journaling apps with a smooth, low-friction UI and a friendly Aussie vibe. Built for speed, clarity, and flexibility — it's your digital training partner with no fluff, no ads, and no excuses.
+
+---
+
+## 🛠 Dev Notes
+
+This project is built using:
+
+- `@angular/material`
+- Supabase's `@supabase/supabase-js` SDK
+- Supabase GraphQL endpoint via Apollo Client
+
+---
+
+## 📦 Installation (local dev)
 
 ```bash
+npm install
 ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

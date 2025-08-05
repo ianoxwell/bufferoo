@@ -1,4 +1,4 @@
-import { effect, Injectable, signal, Signal, WritableSignal } from '@angular/core';
+import { Injectable, signal, Signal } from '@angular/core';
 import { IExercise } from '@models/exercise.model';
 import { Session } from '@supabase/supabase-js';
 

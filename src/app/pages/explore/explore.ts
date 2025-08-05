@@ -1,4 +1,4 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { IExercise } from '@models/exercise.model';
 import { AppStore } from 'src/app/app.store';
 
@@ -9,9 +9,10 @@ import { AppStore } from 'src/app/app.store';
   styleUrl: './explore.scss',
 })
 export class ExploreComponent {
+  readonly appStore = inject(AppStore);
   exercises: IExercise[] = [];
 
-  constructor(private appStore: AppStore) {
+  constructor() {
     effect(() => {
       const exercises = this.appStore.exercises();
       if (exercises.length) {

@@ -1,11 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
 import { SupabaseService } from '@app/supabase.service';
 import { IProfile } from '@models/user.model';
-import { AuthSession } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-account',
@@ -13,11 +13,11 @@ import { AuthSession } from '@supabase/supabase-js';
   templateUrl: './account.html',
   styleUrl: './account.css',
 })
-export class Account {
-  @Input() session!: AuthSession;
+export class Account implements OnInit {
   loading = false;
   profile!: IProfile;
   updateProfileForm: FormGroup;
+  router = inject(Router);
 
   constructor(private supabaseService: SupabaseService) {
     this.updateProfileForm = this.createForm();
@@ -44,8 +44,11 @@ export class Account {
   async getProfile() {
     try {
       this.loading = true;
-      const { user } = this.session;
-      const { data: profile, error, status } = await this.supabaseService.profile(user);
+      const session = this.supabaseService.session();
+      if (!session?.user) {
+        throw new Error('User not logged in');
+      }
+      const { data: profile, error, status } = await this.supabaseService.profile(session.user);
       if (error && status !== 406) {
         throw error;
       }
@@ -64,12 +67,15 @@ export class Account {
   async updateProfile(): Promise<void> {
     try {
       this.loading = true;
-      const { user } = this.session;
+      const session = this.supabaseService.session();
+      if (!session?.user) {
+        throw new Error('User not logged in');
+      }
       const username = this.updateProfileForm.value.username as string;
       const website = this.updateProfileForm.value.website as string;
       const avatar_url = this.updateProfileForm.value.avatar_url as string;
       const { error } = await this.supabaseService.updateProfile({
-        id: user.id,
+        id: session.user.id,
         username,
         website,
         avatar_url,
@@ -83,7 +89,10 @@ export class Account {
       this.loading = false;
     }
   }
+
   async signOut() {
     await this.supabaseService.signOut();
+    this.router.navigate(['/auth']);
   }
 }
+

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -17,14 +17,18 @@ import { SupabaseService } from '@app/supabase.service';
   templateUrl: './auth.html',
   styleUrl: './auth.css',
 })
-export class Auth {
+export class Auth implements OnInit {
   signInForm: FormGroup;
   loading = false;
 
-  constructor(
-    private readonly supabaseService: SupabaseService,
-  ) {
+  constructor(private readonly supabaseService: SupabaseService, private readonly router: Router) {
     this.signInForm = this.createForm();
+  }
+
+  ngOnInit(): void {
+    if (this.supabaseService.session()) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   createForm() {

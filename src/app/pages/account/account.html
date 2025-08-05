@@ -1,8 +1,8 @@
 <form [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()" class="form-widget">
   <!-- <app-avatar [avatarUrl]="this.avatarUrl" (upload)="updateAvatar($event)"> </app-avatar> -->
   <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Email</mat-label>
-    <input matInput id="email" type="text" [value]="session.user.email" disabled />
+    <mat-label>User name</mat-label>
+    <input matInput id="username" type="text" formControlName="username" />
   </mat-form-field>
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Name</mat-label>

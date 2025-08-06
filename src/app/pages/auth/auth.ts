@@ -11,7 +11,7 @@ import { AppStore } from 'src/app/app.store';
   selector: 'app-auth',
   imports: [MatInputModule, ReactiveFormsModule, MatFormFieldModule, MatButtonModule],
   templateUrl: './auth.html',
-  styleUrl: './auth.css',
+  styleUrl: './auth.scss',
 })
 export class Auth implements OnInit {
   private readonly supabaseService = inject(SupabaseService);

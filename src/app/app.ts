@@ -5,7 +5,7 @@ import { filter, map } from 'rxjs/operators';
 import { protectedRoutes } from './app.routes';
 import { BottomToolbarComponent } from './components/bottom-toolbar/bottom-toolbar';
 import { AuthService } from '@core/auth.service';
-import { HeaderComponent } from "./components/header/header";
+import { HeaderComponent } from './components/header/header';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +18,12 @@ export class App implements OnInit {
   private authService = inject(AuthService);
   protected showToolbar = signal(false);
 
+  constructor() {
+    this.authService.initializeAuth();
+  }
+
   ngOnInit() {
     this.routerEvents().subscribe();
-    this.authService.initializeAuth();
   }
 
   routerEvents() {

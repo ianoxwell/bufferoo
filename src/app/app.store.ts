@@ -21,7 +21,7 @@ export class AppStore {
 
   setSession(session: Session | null) {
     this.state._session.set(session);
-    this.state._isSessionLoaded.set(!!session);
+    this.state._isSessionLoaded.set(true); // ✅ Session loading is complete regardless of result
   }
 
   setExercises(exercises: IExercise[]) {

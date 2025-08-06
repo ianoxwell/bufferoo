@@ -1,0 +1,12 @@
+form {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    mat-form-field {
+      flex: 1;
+    }
+    button {
+        margin-bottom: 1.25rem;
+    }
+}

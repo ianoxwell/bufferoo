@@ -1,4 +1,5 @@
 import { Injectable, signal, Signal } from '@angular/core';
+import { IExerciseFilter } from './models/exercise-filter.model';
 import { IExercise } from '@models/exercise.model';
 import { Session } from '@supabase/supabase-js';
 
@@ -9,12 +10,14 @@ export class AppStore {
     _isSessionLoaded: signal<boolean>(false),
     _exercises: signal<IExercise[]>([]),
     _exercisesLoaded: signal<boolean>(false),
+    _exerciseFilter: signal<IExerciseFilter | null>(null),
   } as const;
 
   public readonly session: Signal<Session | null> = this.state._session.asReadonly();
   public readonly isSessionLoaded: Signal<boolean> = this.state._isSessionLoaded.asReadonly();
   public readonly exercises: Signal<IExercise[]> = this.state._exercises.asReadonly();
   public readonly exercisesLoaded: Signal<boolean> = this.state._exercisesLoaded.asReadonly();
+  public readonly exerciseFilter: Signal<IExerciseFilter | null> = this.state._exerciseFilter.asReadonly();
 
   setSession(session: Session | null) {
     this.state._session.set(session);
@@ -27,5 +30,9 @@ export class AppStore {
 
   setExercisesLoaded(loaded: boolean) {
     this.state._exercisesLoaded.set(loaded);
+  }
+
+  setExerciseFilter(filter: IExerciseFilter | null) {
+    this.state._exerciseFilter.set(filter);
   }
 }

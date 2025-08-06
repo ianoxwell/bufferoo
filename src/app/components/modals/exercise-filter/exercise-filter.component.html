@@ -1,0 +1,115 @@
+<mat-toolbar color="primary">
+  <h1 mat-dialog-title>Filter Exercises</h1>
+  <button mat-icon-button type="button" (click)="dialogRef.close(null)" aria-label="Close">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-dialog-content>
+  <div class="filter-controls">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <mat-icon matTextPrefix>search</mat-icon>
+      <input
+        matInput
+        type="text"
+        placeholder="Search for an exercise"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Force</mat-label>
+      <mat-select multiple [ngModel]="force()" (ngModelChange)="force.set($event)">
+        <mat-option value="push">Push</mat-option>
+        <mat-option value="pull">Pull</mat-option>
+        <mat-option value="static">Static</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Level</mat-label>
+      <mat-select multiple [ngModel]="level()" (ngModelChange)="level.set($event)">
+        <mat-option value="beginner">Beginner</mat-option>
+        <mat-option value="intermediate">Intermediate</mat-option>
+        <mat-option value="expert">Expert</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Mechanic</mat-label>
+      <mat-select multiple [ngModel]="mechanic()" (ngModelChange)="mechanic.set($event)">
+        <mat-option value="isolation">Isolation</mat-option>
+        <mat-option value="compound">Compound</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Equipment</mat-label>
+      <mat-select multiple [ngModel]="equipment()" (ngModelChange)="equipment.set($event)">
+        @for (option of equipmentOptions(); track option) {
+        <mat-option [value]="option">{{ option }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Muscles</mat-label>
+      <mat-select multiple [ngModel]="muscles()" (ngModelChange)="muscles.set($event)">
+        @for (option of muscleOptions(); track option) {
+        <mat-option [value]="option">{{ option }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Sort by</mat-label>
+      <mat-select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+        <mat-option value="name">Name</mat-option>
+        <mat-option value="difficulty">Difficulty</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <cdk-virtual-scroll-viewport itemSize="50" class="exercise-list">
+    <mat-list>
+      <mat-list-item
+        *cdkVirtualFor="let exercise of filteredExercises(); trackBy: trackByExerciseId"
+        (click)="expandedExercise.set(expandedExercise() === exercise ? null : exercise)"
+        [class.expanded]="expandedExercise() === exercise"
+      >
+        <img
+          matListItemAvatar
+          [src]="`https://mimaktxujtbngbncgwqn.supabase.co/storage/v1/object/public/exercises/${exercise.images[0]}`"
+          [alt]="exercise.name"
+        />
+        <mat-label matListItemTitle>{{ exercise.name }}</mat-label>
+        <div matListItemLine>
+          <span>{{ exercise.force }} | {{ exercise.level }} | {{ exercise.mechanic }}</span>
+          <span>{{ exercise.equipment }} | {{ exercise.primaryMuscles.join(", ") }}</span>
+          @if (expandedExercise() === exercise) {
+          <div class="exercise-details">
+            @if (exercise.secondaryMuscles.length) {
+            <mat-label>Secondary Muscles</mat-label>
+            <div class="secondary-muscles">{{ exercise.secondaryMuscles.join(", ") }}</div>
+            } @if (exercise.instructions.length) {
+            <mat-label>Instructions</mat-label>
+            <ol>
+              @for (instruction of exercise.instructions; track $index) {
+              <li>{{ instruction }}</li>
+              }
+            </ol>
+            }
+          </div>
+          }
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </cdk-virtual-scroll-viewport>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close(null)">Cancel</button>
+  <button mat-raised-button color="primary" (click)="applyFilters()">Apply</button>
+</mat-dialog-actions>

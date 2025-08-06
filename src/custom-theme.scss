@@ -8,10 +8,6 @@ html {
         primary: mat.$orange-palette,
         tertiary: mat.$green-palette,
       ),
-      typography: (
-        brand-family: "Roboto",
-        plain-family: "Roboto",
-      ),
       density: (
         scale: 0,
       ),
@@ -35,4 +31,7 @@ body {
 
   // Reset the user agent margin.
   margin: 0;
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
 }

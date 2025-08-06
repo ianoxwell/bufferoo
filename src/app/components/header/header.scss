@@ -1,0 +1,21 @@
+header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.25rem 1rem 0;
+  background-color: var(--bufferoo-logo-background);
+  .logo {
+    height: 5rem;
+  }
+  h1 {
+    margin: 0;
+    font-size: 2.25rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+  }
+  .tagline {
+    font-size: 0.825rem;
+    color: var(--mat-sys-on-surface-variant);
+    font-style: italic;
+  }
+}

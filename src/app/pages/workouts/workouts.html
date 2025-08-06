@@ -1,18 +1,19 @@
-<h1>Workouts</h1>
-<h2>Public Workouts</h2>
-<div class="horizontal-scroll-container">
-  <div class="horizontal-scroll-content">
-    @for (workout of workouts; track workout.id) {
+<h2>Workouts</h2>
+<section>
+  <h3>Public Workouts</h3>
+  <div class="horizontal-scroll-container">
+    <div class="horizontal-scroll-content">
+      @for (workout of workouts; track workout.id) {
       <app-workout-card [workout]="workout"></app-workout-card>
-    }
+      }
+    </div>
   </div>
-</div>
 
-<div>
-  <button mat-raised-button color="primary" (click)="onAddExampleWorkout()">
-    Create Example
-  </button>
-</div>
+  <div>
+    <button mat-raised-button color="primary" (click)="onAddExampleWorkout()">Create Example</button>
+  </div>
+</section>
+
 <div class="fixed-bottom-add-workout">
   <button matFab (click)="onAddWorkout()" aria-label="Add Workout">
     <mat-icon>add</mat-icon>

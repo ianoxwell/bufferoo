@@ -1,10 +1,11 @@
 .main {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: calc(100vh - 5.25rem); /* Adjust for the height of the toolbar */
 }
 
 .content {
   flex: 1;
+  padding: 1rem;;
   padding-bottom: 64px; /* Height of the toolbar */
 }

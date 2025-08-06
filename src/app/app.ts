@@ -5,10 +5,11 @@ import { filter, map } from 'rxjs/operators';
 import { protectedRoutes } from './app.routes';
 import { BottomToolbarComponent } from './components/bottom-toolbar/bottom-toolbar';
 import { AuthService } from '@core/auth.service';
+import { HeaderComponent } from "./components/header/header";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, BottomToolbarComponent, CommonModule],
+  imports: [RouterOutlet, BottomToolbarComponent, CommonModule, HeaderComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

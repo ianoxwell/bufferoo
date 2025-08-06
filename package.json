@@ -9,7 +9,8 @@
     "test": "ng test",
     "start:test": "ng serve --port 42061 --configuration test",
     "lint": "ng lint --max-warnings=0",
-    "lint:fix": "ng lint --fix"
+    "lint:fix": "ng lint --fix",
+    "typecheck": "tsc --noEmit"
   },
   "prettier": {
     "printWidth": 120,

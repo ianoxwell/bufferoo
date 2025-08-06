@@ -30,7 +30,7 @@ export class BottomToolbarComponent {
   protected user: WritableSignal<{ username: string | null; avatar_url: string | null } | null> = signal(null);
   navigationMenu = [
     { label: 'Home', icon: 'home', route: '/dashboard' },
-    { label: 'Explore', icon: 'explore', route: '/explore' },
+    { label: 'Calendar', icon: 'calendar_month', route: '/calendar' },
     { label: 'Workouts', icon: 'fitness_center', route: '/workout' },
   ];
 

@@ -1,15 +1,18 @@
 import { Component, effect, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { ModalService } from '@app/core/modal-service';
 import { IExercise } from '@models/exercise.model';
 import { AppStore } from 'src/app/app.store';
 
 @Component({
   selector: 'app-explore',
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './explore.html',
   styleUrl: './explore.scss',
 })
 export class ExploreComponent {
   readonly appStore = inject(AppStore);
+  readonly modalService = inject(ModalService);
   exercises: IExercise[] = [];
 
   constructor() {
@@ -37,5 +40,13 @@ export class ExploreComponent {
         console.log('Unique muscles:', uniqueMuscles);
       }
     });
+  }
+
+  async onShowFilterModal() {
+    const result = await this.modalService.openExerciseFilter();
+    if (result) {
+      console.log('Filter applied:', result);
+      // Apply the filters
+    }
   }
 }

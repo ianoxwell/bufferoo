@@ -13,12 +13,12 @@ export const routes: Routes = [
   },
   {
     path: 'workout',
-    loadComponent: () => import('./pages/workout/workout').then((m) => m.WorkoutComponent),
+    loadComponent: () => import('./pages/workouts/workouts').then((m) => m.WorkoutsComponent),
     canActivate: [authGuard],
     children: [
       {
         path: ':id',
-        loadComponent: () => import('./pages/workout/workout').then((m) => m.WorkoutComponent),
+        loadComponent: () => import('./pages/workouts/workouts').then((m) => m.WorkoutsComponent),
         canActivate: [authGuard],
       },
       {
@@ -35,8 +35,8 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'explore',
-    loadComponent: () => import('./pages/explore/explore').then((m) => m.ExploreComponent),
+    path: 'calendar',
+    loadComponent: () => import('./pages/calendar/calendar').then((m) => m.CalendarComponent),
     canActivate: [authGuard],
   },
   {

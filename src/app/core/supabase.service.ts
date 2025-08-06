@@ -1,4 +1,4 @@
-import { inject, Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { IWorkout } from '@app/models/workout.model';
 import { environment } from '@env/environment';
 import { IProfile } from '@models/user.model';
@@ -8,22 +8,19 @@ import { AuthChangeEvent, createClient, Session, SupabaseClient, User } from '@s
   providedIn: 'root',
 })
 export class SupabaseService {
-  private supabase!: SupabaseClient;
+  private supabase: SupabaseClient;
   private readonly supabaseUrl = import.meta.env.NG_APP_SUPABASE_URL;
   private readonly supabaseKey = import.meta.env.NG_APP_SUPABASE_KEY;
-  private readonly ngZone = inject(NgZone);
 
   constructor() {
-    this.ngZone.runOutsideAngular(() => {
-      this.supabase = createClient(this.supabaseUrl, this.supabaseKey, {
-        auth: {
-          storage: window.localStorage,
-          autoRefreshToken: true,
-          persistSession: true,
-          detectSessionInUrl: true,
-          flowType: 'pkce',
-        },
-      });
+    this.supabase = createClient(this.supabaseUrl, this.supabaseKey, {
+      auth: {
+        storage: window.localStorage,
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        flowType: 'pkce',
+      },
     });
   }
 

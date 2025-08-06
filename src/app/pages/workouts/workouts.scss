@@ -1,0 +1,19 @@
+.horizontal-scroll-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 1rem 0;
+}
+
+.horizontal-scroll-content {
+  display: inline-flex;
+  gap: 1rem;
+}
+
+.fixed-bottom-add-workout {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 5rem; // adjust if your toolbar is a different height
+  z-index: 100;
+  // Optional: add a drop shadow or transition for effect
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}

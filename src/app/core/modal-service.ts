@@ -1,12 +1,14 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmModalComponent } from '@components/modals/confirm-modal/confirm-modal';
+import { CreateWorkoutModalComponent } from '@components/modals/create-workout-modal/create-workout-modal';
 import { ExerciseFilterComponent } from '@components/modals/exercise-filter/exercise-filter.component';
 import { EMessageStatus, ICreateDialogInput, IDialogText } from '@models/dialog.model';
 import { IExerciseFilter } from '@models/exercise-filter.model';
-import { Observable, switchMap, take, tap, timer, firstValueFrom } from 'rxjs';
+import { IWorkout } from '@models/workout.model';
+import { firstValueFrom, Observable, switchMap, take, tap, timer } from 'rxjs';
 import { getAnimationDuration } from './animation';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -178,7 +180,7 @@ export class ModalService {
   async openExerciseFilter(): Promise<IExerciseFilter | null> {
     const options: ICreateDialogInput<null> = {
       id: 'exerciseFilterDialog',
-      data: {status: EMessageStatus.Information, title: 'Filter Exercises', isAlert: false},
+      data: { status: EMessageStatus.Information, title: 'Filter Exercises', isAlert: false },
       component: ExerciseFilterComponent,
       width: '100vw',
       height: '100vh',
@@ -187,5 +189,20 @@ export class ModalService {
       panelClass: 'full-screen-dialog',
     };
     return this.createDialog<IExerciseFilter | null, null>(options);
+  }
+
+  /** Opens the create workout dialog */
+  async openCreateWorkout(): Promise<IWorkout | null> {
+    const options: ICreateDialogInput<IDialogText> = {
+      id: 'createWorkoutDialog',
+      data: { status: EMessageStatus.Information, title: 'Create New Workout', isAlert: false, disableClose: true },
+      component: CreateWorkoutModalComponent,
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      panelClass: 'full-screen-dialog',
+    };
+    return this.createDialog<IWorkout | null, IDialogText>(options);
   }
 }

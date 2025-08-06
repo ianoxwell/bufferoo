@@ -1,3 +1,20 @@
 <h1>Workouts</h1>
-<div>list of workouts - show all brings in modal for all workouts</div>
-<div>Scheduled workouts</div>
+<h2>Public Workouts</h2>
+<div class="horizontal-scroll-container">
+  <div class="horizontal-scroll-content">
+    @for (workout of workouts; track workout.id) {
+      <app-workout-card [workout]="workout"></app-workout-card>
+    }
+  </div>
+</div>
+
+<div>
+  <button mat-raised-button color="primary" (click)="onAddExampleWorkout()">
+    Create Example
+  </button>
+</div>
+<div class="fixed-bottom-add-workout">
+  <button matFab (click)="onAddWorkout()" aria-label="Add Workout">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

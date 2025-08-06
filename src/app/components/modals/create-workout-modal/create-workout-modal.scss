@@ -1,0 +1,227 @@
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+mat-dialog-content {
+  padding: 24px;
+  min-height: 200px;
+  max-height: unset;
+
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .image-selection-section {
+    margin-bottom: 24px;
+
+    h3 {
+      margin: 0 0 16px 0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--mat-sys-on-surface);
+    }
+
+    .image-carousel {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 8px 0;
+      margin: 0 -8px;
+      padding: 8px;
+      
+      // Custom scrollbar styling
+      &::-webkit-scrollbar {
+        height: 6px;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: var(--mat-sys-surface-variant);
+        border-radius: 3px;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: var(--mat-sys-outline);
+        border-radius: 3px;
+        
+        &:hover {
+          background: var(--mat-sys-on-surface-variant);
+        }
+      }
+
+      .image-option {
+        position: relative;
+        min-width: 120px;
+        height: 80px;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+          transform: scale(1.02);
+          border-color: var(--mat-sys-outline-variant);
+        }
+
+        &:focus {
+          outline: none;
+          border-color: var(--mat-sys-primary);
+          box-shadow: 0 0 0 2px color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+        }
+
+        &.selected {
+          border-color: var(--mat-sys-primary);
+          box-shadow: 0 0 0 2px color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .selection-indicator {
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          background: var(--mat-sys-primary);
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            color: var(--mat-sys-on-primary);
+          }
+        }
+      }
+    }
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .toggle-field {
+    margin: 16px 0;
+
+    mat-slide-toggle {
+      margin-bottom: 8px;
+    }
+
+    .toggle-description {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--mat-sys-on-surface-variant);
+      line-height: 1.4;
+    }
+  }
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background-color: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+    border-radius: 8px;
+    margin-top: 16px;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    span {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  gap: 12px;
+
+  button {
+    min-width: 80px;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .dialog-header {
+    padding: 12px 16px;
+    
+    h1 {
+      font-size: 1.125rem;
+    }
+  }
+
+  mat-dialog-content {
+    padding: 16px;
+
+    .image-selection-section {
+      margin-bottom: 20px;
+
+      h3 {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+      }
+
+      .image-carousel {
+        gap: 8px;
+        padding: 4px;
+        margin: 0 -4px;
+
+        .image-option {
+          min-width: 100px;
+          height: 70px;
+
+          .selection-indicator {
+            width: 20px;
+            height: 20px;
+            top: 2px;
+            right: 2px;
+
+            mat-icon {
+              font-size: 14px;
+              width: 14px;
+              height: 14px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  mat-dialog-actions {
+    padding: 12px 16px;
+    flex-direction: column-reverse;
+    
+    button {
+      width: 100%;
+    }
+  }
+}

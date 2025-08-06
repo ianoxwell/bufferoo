@@ -1,5 +1,6 @@
 export interface IExercise {
-  exercise_id: string;
+  id: string; // Unique identifier for the exercise
+  exercise_id: string; // Identifier for the exercise, possibly used for external references
   name: string;
   force: TExerciseForce;
   level: TExerciseLevel;

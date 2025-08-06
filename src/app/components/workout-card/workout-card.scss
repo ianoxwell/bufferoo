@@ -1,0 +1,29 @@
+.workout-card {
+  position: relative;
+  width: 200px;
+  height: 150px;
+  border-radius: 0.5rem;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  color: white;
+}
+
+.workout-card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+p {
+  margin: 0;
+  font-size: 0.9rem;
+}

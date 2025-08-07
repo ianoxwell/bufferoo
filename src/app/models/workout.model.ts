@@ -17,6 +17,7 @@ export interface IWorkoutExercise {
   exercise_id: string;
   position: number;
   sets: ISetEntry[];
+  rest: number | null;
   exercise?: IExercise; // joined
 }
 
@@ -33,6 +34,7 @@ export const exampleWorkout: IWorkout = {
         {
             exercise_id: "ccfbe80b-ac09-4f13-bee6-c2da89be38d6",
             position: 1,
+            rest: 60,
             sets: [
                 { reps: 12, weight: 30 },
                 { reps: 12, weight: 25 },
@@ -42,6 +44,7 @@ export const exampleWorkout: IWorkout = {
         {
             exercise_id: "d7c564d9-520e-4178-93aa-a7e580c5530e",
             position: 2,
+            rest: 60,
             sets: [
                 { reps: 12, weight: 10 },
                 { reps: 12, weight: 10 },
@@ -51,6 +54,7 @@ export const exampleWorkout: IWorkout = {
         {
             exercise_id: "86d86cbc-7d21-48df-b87e-67d0153950e3",
             position: 3,
+            rest: 60,
             sets: [
                 { reps: 12, weight: 30 },
                 { reps: 12, weight: 30 },

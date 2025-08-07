@@ -1,11 +1,6 @@
 <div class="dialog-header">
   <h1>{{ data.title }}</h1>
-  <button
-    type="button"
-    mat-icon-button
-    aria-label="Close dialog"
-    (click)="dismissDialog()"
-  >
+  <button type="button" mat-icon-button aria-label="Close dialog" (click)="dismissDialog()">
     <mat-icon>close</mat-icon>
   </button>
 </div>
@@ -18,106 +13,104 @@
         <h3>Choose a workout image (optional)</h3>
         <div class="image-carousel">
           @for (image of workoutImages; track image.url) {
-            <div 
-              class="image-option"
-              [class.selected]="isImageSelected(image.url)"
-              (click)="onImageSelect(image.url)"
-              [attr.aria-label]="'Select ' + image.name + ' image'"
-              tabindex="0"
-              (keydown.enter)="onImageSelect(image.url)"
-              (keydown.space)="onImageSelect(image.url)"
-            >
-              <img 
-                ngSrc="{{ image.optimizedUrl }}" 
-                [alt]="image.name"
-                width="150"
-                height="150"
-                priority="false"
-                loading="lazy"
-                sizes="(max-width: 768px) 25vw, 15vw"
-                (error)="onImageError($event, image)"
-              />
-              @if (isImageSelected(image.url)) {
-                <div class="selection-indicator">
-                  <mat-icon>check_circle</mat-icon>
-                </div>
-              }
+          <div
+            class="image-option"
+            [class.selected]="isImageSelected(image.url)"
+            (click)="onImageSelect(image.url)"
+            [attr.aria-label]="'Select ' + image.name + ' image'"
+            tabindex="0"
+            (keydown.enter)="onImageSelect(image.url)"
+            (keydown.space)="onImageSelect(image.url)"
+          >
+            <img
+              ngSrc="{{ image.optimizedUrl }}"
+              [alt]="image.name"
+              width="150"
+              height="150"
+              priority="false"
+              loading="lazy"
+              sizes="(max-width: 768px) 25vw, 15vw"
+              (error)="onImageError($event, image)"
+            />
+            @if (isImageSelected(image.url)) {
+            <div class="selection-indicator">
+              <mat-icon>check_circle</mat-icon>
             </div>
+            }
+          </div>
           }
         </div>
       </div>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Workout Name</mat-label>
-        <input 
-          matInput 
-          formControlName="name" 
-          placeholder="Enter workout name"
-          maxlength="100"
-        />
+        <input matInput formControlName="name" placeholder="Enter workout name" maxlength="100" />
         @if (workoutForm.get('name')?.hasError('required') && workoutForm.get('name')?.touched) {
-          <mat-error>Workout name is required</mat-error>
-        }
-        @if (workoutForm.get('name')?.hasError('minlength') && workoutForm.get('name')?.touched) {
-          <mat-error>Workout name cannot be empty</mat-error>
-        }
-        @if (workoutForm.get('name')?.hasError('maxlength')) {
-          <mat-error>Workout name cannot exceed 100 characters</mat-error>
+        <mat-error>Workout name is required</mat-error>
+        } @if (workoutForm.get('name')?.hasError('minlength') && workoutForm.get('name')?.touched) {
+        <mat-error>Workout name cannot be empty</mat-error>
+        } @if (workoutForm.get('name')?.hasError('maxlength')) {
+        <mat-error>Workout name cannot exceed 100 characters</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description (Optional)</mat-label>
-        <textarea 
-          matInput 
-          formControlName="description" 
+        <textarea
+          matInput
+          formControlName="description"
           placeholder="Describe your workout..."
           rows="3"
           maxlength="500"
         ></textarea>
         @if (workoutForm.get('description')?.hasError('maxlength')) {
-          <mat-error>Description cannot exceed 500 characters</mat-error>
+        <mat-error>Description cannot exceed 500 characters</mat-error>
         }
       </mat-form-field>
 
       <div class="toggle-field">
-        <mat-slide-toggle formControlName="isPublic">
-          Make this workout public
-        </mat-slide-toggle>
-        <p class="toggle-description">
-          Public workouts can be viewed and used by other users
-        </p>
+        <mat-slide-toggle formControlName="isPublic"> Make this workout public </mat-slide-toggle>
+        <p class="toggle-description">Public workouts can be viewed and used by other users</p>
       </div>
+
+      <section>
+        @if (exercisesLength === 0) {
+        <div class="no-exercises-message">
+          <mat-icon>info</mat-icon>
+          <span>Add at least one exercise to your workout.</span>
+        </div>
+        } @else {
+        <div class="exercise-list">
+          <h3>Exercises in this workout</h3>
+          <ul>
+            @for (exercise of workoutForm.get('exercises')?.value; track exercise.exercise_id) {
+            <li>
+              {{ exercise.name }} - {{ exercise.sets.length }} sets @if (exercise.rest) { (Rest:
+              {{ exercise.rest }} seconds) }
+            </li>
+            }
+          </ul>
+        </div>
+        }
+
+        <button type="button" mat-raised-button class="add-exercise-button" (click)="openExerciseFilter()">
+          Add Exercise
+        </button>
+      </section>
     </div>
 
     @if (errorMessage) {
-      <div class="error-message">
-        <mat-icon>error</mat-icon>
-        <span>{{ errorMessage }}</span>
-      </div>
+    <div class="error-message">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
     }
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button 
-    mat-button 
-    type="button" 
-    (click)="onCancel()"
-    [disabled]="isLoading"
-  >
-    Cancel
-  </button>
-  <button 
-    mat-raised-button 
-    color="primary" 
-    (click)="onSubmit()"
-    [disabled]="workoutForm.invalid || isLoading"
-  >
-    @if (isLoading) {
-      Creating...
-    } @else {
-      Create Workout
-    }
+  <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="workoutForm.invalid || isLoading">
+    @if (isLoading) { Creating... } @else { Create Workout }
   </button>
 </mat-dialog-actions>

@@ -21,7 +21,6 @@ mat-dialog-content {
   .form-fields {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
   }
 
   .image-selection-section {
@@ -124,7 +123,7 @@ mat-dialog-content {
   }
 
   .toggle-field {
-    margin: 1rem 0;
+    margin: 0.75rem 0;
 
     mat-slide-toggle {
       margin-bottom: 0.5rem;
@@ -136,6 +135,11 @@ mat-dialog-content {
       color: var(--mat-sys-on-surface-variant);
       line-height: 1.4;
     }
+  }
+  .add-exercise-button {
+    margin-top: 1rem;
+    width: fit-content;
+    align-self: flex-start;
   }
 
   .error-message {

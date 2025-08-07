@@ -114,8 +114,8 @@ export class CreateWorkoutModalComponent implements OnInit {
     }
   }
 
-  async openExerciseFilter(): Promise<void> {
-    // Logic to open the exercise filter dialog
+  async openSelectExercise(): Promise<void> {
+    // Logic to open the exercise selection dialog
     const selectedExercise = await this.modalService.openSelectExercise();
     if (selectedExercise) {
       const exercisesArray = this.workoutForm.get('exercises') as FormArray;

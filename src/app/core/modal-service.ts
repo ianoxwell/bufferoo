@@ -4,7 +4,7 @@ import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dial
 import { IExercise } from '@app/models/exercise.model';
 import { ConfirmModalComponent } from '@components/modals/confirm-modal/confirm-modal';
 import { CreateWorkoutModalComponent } from '@components/modals/create-workout-modal/create-workout-modal';
-import { ExerciseFilterComponent } from '@components/modals/exercise-filter/exercise-filter.component';
+import { SelectExerciseComponent } from '@components/modals/select-exercise/select-exercise.component';
 import { EMessageStatus, ICreateDialogInput, IDialogText } from '@models/dialog.model';
 import { IWorkout } from '@models/workout.model';
 import { firstValueFrom, Observable, switchMap, take, tap, timer } from 'rxjs';
@@ -176,12 +176,12 @@ export class ModalService {
     return this.createDialog<void, IDialogText>(options);
   }
 
-  /** Opens the exercise filter dialog */
+  /** Opens the select exercise dialog */
   async openSelectExercise(): Promise<IExercise | null> {
     const options: ICreateDialogInput<null> = {
-      id: 'exerciseFilterDialog',
-      data: { status: EMessageStatus.Information, title: 'Filter Exercises', isAlert: false },
-      component: ExerciseFilterComponent,
+      id: 'selectExerciseDialog',
+      data: { status: EMessageStatus.Information, title: 'Select Exercise', isAlert: false },
+      component: SelectExerciseComponent,
       width: '100vw',
       height: '100vh',
       maxWidth: '100vw',

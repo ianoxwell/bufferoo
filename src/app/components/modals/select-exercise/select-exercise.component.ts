@@ -1,4 +1,3 @@
-
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
@@ -19,9 +18,9 @@ import { IExerciseFilter } from '@models/exercise-filter.model';
 import { IExercise, TExerciseEquipment, TExerciseForce, TExerciseLevel, TExerciseMechanic, TExerciseMuscleGroup } from '@models/exercise.model';
 
 @Component({
-  selector: 'app-exercise-filter',
-  templateUrl: './exercise-filter.component.html',
-  styleUrls: ['./exercise-filter.component.scss'],
+  selector: 'app-select-exercise',
+  templateUrl: './select-exercise.component.html',
+  styleUrls: ['./select-exercise.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatToolbarModule,
@@ -38,9 +37,9 @@ import { IExercise, TExerciseEquipment, TExerciseForce, TExerciseLevel, TExercis
     NgOptimizedImage,
   ],
 })
-export class ExerciseFilterComponent {
+export class SelectExerciseComponent {
   data: DialogMessageData<null> = inject(MAT_DIALOG_DATA);
-  dialogRef = inject(MatDialogRef<ExerciseFilterComponent>);
+  dialogRef = inject(MatDialogRef<SelectExerciseComponent>);
   private readonly store = inject(AppStore);
 
   readonly exercises = this.store.exercises;

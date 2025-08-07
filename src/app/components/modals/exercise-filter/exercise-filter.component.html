@@ -17,6 +17,11 @@
         [ngModel]="search()"
         (ngModelChange)="search.set($event)"
       />
+      @if (search()) {
+        <button matSuffix mat-icon-button (click)="search.set('')" aria-label="Clear search">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="outline">
@@ -70,46 +75,101 @@
         <mat-option value="difficulty">Difficulty</mat-option>
       </mat-select>
     </mat-form-field>
+
+    <div class="filter-actions">
+      <button mat-stroked-button (click)="clearFilters()">
+        <mat-icon>clear_all</mat-icon>
+        Clear Filters
+      </button>
+    </div>
   </div>
 
-  <cdk-virtual-scroll-viewport itemSize="50" class="exercise-list">
-    <mat-list>
-      <mat-list-item
-        *cdkVirtualFor="let exercise of filteredExercises(); trackBy: trackByExerciseId"
-        (click)="expandedExercise.set(expandedExercise() === exercise ? null : exercise)"
-        [class.expanded]="expandedExercise() === exercise"
-      >
-        <img
-          matListItemAvatar
-          [src]="`https://mimaktxujtbngbncgwqn.supabase.co/storage/v1/object/public/exercises/${exercise.images[0]}`"
-          [alt]="exercise.name"
-        />
-        <mat-label matListItemTitle>{{ exercise.name }}</mat-label>
-        <div matListItemLine>
-          <span>{{ exercise.force }} | {{ exercise.level }} | {{ exercise.mechanic }}</span>
-          <span>{{ exercise.equipment }} | {{ exercise.primaryMuscles.join(", ") }}</span>
-          @if (expandedExercise() === exercise) {
-          <div class="exercise-details">
-            @if (exercise.secondaryMuscles.length) {
-            <mat-label>Secondary Muscles</mat-label>
-            <div class="secondary-muscles">{{ exercise.secondaryMuscles.join(", ") }}</div>
-            } @if (exercise.instructions.length) {
-            <mat-label>Instructions</mat-label>
-            <ol>
-              @for (instruction of exercise.instructions; track $index) {
-              <li>{{ instruction }}</li>
-              }
-            </ol>
-            }
-          </div>
-          }
+  <div class="exercise-results">
+    <div class="results-header">
+      <h3>{{ filteredExercises().length }} exercise(s) found</h3>
+      @if (selectedExercise()) {
+        <div class="selected-indicator">
+          <mat-icon>check_circle</mat-icon>
+          <span>{{ selectedExercise()!.name }} selected</span>
         </div>
-      </mat-list-item>
-    </mat-list>
-  </cdk-virtual-scroll-viewport>
+      }
+    </div>
+
+    <cdk-virtual-scroll-viewport itemSize="140" class="exercise-grid">
+      <div class="exercise-cards">
+        @for (exercise of filteredExercises(); track trackByExerciseId($index, exercise)) {
+          <mat-card 
+            class="exercise-card"
+            [class.selected]="isExerciseSelected(exercise)"
+            (click)="selectExercise(exercise)"
+            tabindex="0"
+            (keydown.enter)="selectExercise(exercise)"
+            (keydown.space)="selectExercise(exercise)"
+            [attr.aria-label]="'Select ' + exercise.name"
+          >
+            @if (isExerciseSelected(exercise)) {
+              <div class="selection-indicator">
+                <mat-icon>check_circle</mat-icon>
+              </div>
+            }
+            
+            @if (exercise.images && exercise.images[0]) {
+              <img 
+                ngSrc="{{ getOptimizedExerciseImageUrl(exercise.images[0]) }}"
+                [alt]="exercise.name"
+                width="120"
+                height="120"
+                priority="false"
+                loading="lazy"
+                sizes="(max-width: 768px) 30vw, 15vw"
+                class="exercise-image"
+              />
+            } @else {
+              <div class="exercise-image-placeholder">
+                <mat-icon>fitness_center</mat-icon>
+              </div>
+            }
+            
+            <mat-card-content>
+              <h4 class="exercise-name">{{ exercise.name }}</h4>
+              <div class="exercise-meta">
+                <mat-chip-set>
+                    @if (exercise.level) {
+                    <mat-chip>{{ exercise.level }}</mat-chip>
+                    }
+                    @if (exercise.force) {
+                    <mat-chip>{{ exercise.force }}</mat-chip>
+                    }
+                    @if (exercise.mechanic) {
+                    <mat-chip>{{ exercise.mechanic }}</mat-chip>
+                    }
+                </mat-chip-set>
+                <div class="exercise-details">
+                  <span class="equipment">{{ exercise.equipment }}</span>
+                  <span class="muscles">{{ exercise.primaryMuscles.slice(0, 2).join(', ') }}
+                    @if (exercise.primaryMuscles.length > 2) {
+                      <span class="more-muscles">+{{ exercise.primaryMuscles.length - 2 }} more</span>
+                    }
+                  </span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <button mat-button (click)="dialogRef.close(null)">Cancel</button>
-  <button mat-raised-button color="primary" (click)="applyFilters()">Apply</button>
+  <button mat-stroked-button (click)="applyFiltersOnly()">Apply Filters Only</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="applySelection()"
+    [disabled]="!selectedExercise()"
+  >
+    Select Exercise
+  </button>
 </mat-dialog-actions>

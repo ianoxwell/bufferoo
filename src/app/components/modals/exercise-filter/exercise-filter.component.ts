@@ -1,17 +1,20 @@
 
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppStore } from '@app/app.store';
 import { DialogMessageData } from '@app/models/dialog.model';
+import { environment } from '@env/environment';
 import { IExerciseFilter } from '@models/exercise-filter.model';
 import { IExercise, TExerciseEquipment, TExerciseForce, TExerciseLevel, TExerciseMechanic, TExerciseMuscleGroup } from '@models/exercise.model';
 
@@ -28,9 +31,11 @@ import { IExercise, TExerciseEquipment, TExerciseForce, TExerciseLevel, TExercis
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatCardModule,
+    MatChipsModule,
     ScrollingModule,
-    MatListModule,
     FormsModule,
+    NgOptimizedImage,
   ],
 })
 export class ExerciseFilterComponent {
@@ -39,7 +44,7 @@ export class ExerciseFilterComponent {
   private readonly store = inject(AppStore);
 
   readonly exercises = this.store.exercises;
-  readonly expandedExercise = signal<IExercise | null>(null);
+  readonly selectedExercise = signal<IExercise | null>(null);
 
   readonly force = signal<TExerciseForce[]>([]);
   readonly level = signal<TExerciseLevel[]>([]);
@@ -102,15 +107,16 @@ export class ExerciseFilterComponent {
   });
 
   constructor() {
-    const lastFilter = this.store.exerciseFilter();
-    if (lastFilter) {
-      this.force.set(lastFilter.force || []);
-      this.level.set(lastFilter.level || []);
-      this.mechanic.set(lastFilter.mechanic || []);
-      this.equipment.set(lastFilter.equipment || []);
-      this.muscles.set(lastFilter.muscles || []);
-      this.search.set(lastFilter.search || '');
-      this.sortBy.set(lastFilter.sortBy || 'name');
+    // Hydrate form from current exercise filter in store
+    const currentFilter = this.store.exerciseFilter();
+    if (currentFilter) {
+      this.force.set(currentFilter.force || []);
+      this.level.set(currentFilter.level || []);
+      this.mechanic.set(currentFilter.mechanic || []);
+      this.equipment.set(currentFilter.equipment || []);
+      this.muscles.set(currentFilter.muscles || []);
+      this.search.set(currentFilter.search || '');
+      this.sortBy.set(currentFilter.sortBy || 'name');
     }
   }
 
@@ -118,7 +124,36 @@ export class ExerciseFilterComponent {
     return exercise.exercise_id;
   }
 
-  applyFilters() {
+  selectExercise(exercise: IExercise) {
+    this.selectedExercise.set(exercise);
+  }
+
+  isExerciseSelected(exercise: IExercise): boolean {
+    return this.selectedExercise()?.exercise_id === exercise.exercise_id;
+  }
+
+  applySelection() {
+    const selectedExercise = this.selectedExercise();
+    if (selectedExercise) {
+      // Save current filter state to store
+      const filter: IExerciseFilter = {
+        force: this.force(),
+        level: this.level(),
+        mechanic: this.mechanic(),
+        equipment: this.equipment(),
+        muscles: this.muscles(),
+        search: this.search(),
+        sortBy: this.sortBy(),
+      };
+      this.store.setExerciseFilter(filter);
+      
+      // Return the selected exercise
+      this.dialogRef.close(selectedExercise);
+    }
+  }
+
+  applyFiltersOnly() {
+    // Just save filters without selecting an exercise
     const filter: IExerciseFilter = {
       force: this.force(),
       level: this.level(),
@@ -129,6 +164,24 @@ export class ExerciseFilterComponent {
       sortBy: this.sortBy(),
     };
     this.store.setExerciseFilter(filter);
-    this.dialogRef.close(filter);
+    this.dialogRef.close(null);
+  }
+
+  clearFilters() {
+    this.force.set([]);
+    this.level.set([]);
+    this.mechanic.set([]);
+    this.equipment.set([]);
+    this.muscles.set([]);
+    this.search.set('');
+    this.sortBy.set('name');
+  }
+
+  getOptimizedExerciseImageUrl(imageName: string): string {
+    if (!imageName) return '';
+    
+    // Create optimized URL with Supabase image transformation
+    // Using 240x240 for exercise cards (square for consistent layout)
+    return `${environment.exerciseBucket}${imageName}?width=240&height=240&resize=cover&quality=85`;
   }
 }

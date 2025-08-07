@@ -18,9 +18,9 @@
         (ngModelChange)="search.set($event)"
       />
       @if (search()) {
-        <button matSuffix mat-icon-button (click)="search.set('')" aria-label="Clear search">
-          <mat-icon>close</mat-icon>
-        </button>
+      <button matSuffix mat-icon-button (click)="search.set('')" aria-label="Clear search">
+        <mat-icon>close</mat-icon>
+      </button>
       }
     </mat-form-field>
 
@@ -68,13 +68,24 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Sort by</mat-label>
-      <mat-select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
-        <mat-option value="name">Name</mat-option>
-        <mat-option value="difficulty">Difficulty</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="sort-controls">
+      <mat-form-field appearance="outline">
+        <mat-label>Sort by</mat-label>
+        <mat-select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+          <mat-option value="name">Name</mat-option>
+          <mat-option value="difficulty">Difficulty</mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <button 
+        mat-icon-button 
+        (click)="toggleSortDirection()"
+        [attr.aria-label]="'Sort ' + (sortDirection() === 'asc' ? 'descending' : 'ascending')"
+        [title]="'Sort ' + (sortDirection() === 'asc' ? 'descending' : 'ascending')"
+      >
+        <mat-icon>{{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+      </button>
+    </div>
 
     <div class="filter-actions">
       <button mat-stroked-button (click)="clearFilters()">
@@ -86,39 +97,33 @@
 
   <div class="exercise-results">
     <div class="results-header">
-      <h3>{{ filteredExercises().length }} exercise(s) found</h3>
+      <h3>{{ filteredExercises().length }} exercise(s) shown (limited to first 100 for performance)</h3>
       @if (selectedExercise()) {
-        <div class="selected-indicator">
-          <mat-icon>check_circle</mat-icon>
-          <span>{{ selectedExercise()!.name }} selected</span>
-        </div>
+      <div class="selected-indicator">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ selectedExercise()!.name }} selected</span>
+      </div>
       }
     </div>
 
-    <cdk-virtual-scroll-viewport itemSize="140" class="exercise-grid">
+    <div class="exercise-grid">
       <div class="exercise-cards">
         @for (exercise of filteredExercises(); track trackByExerciseId($index, exercise)) {
-          <app-exercise-card
-            [exercise]="exercise"
-            [isSelected]="isExerciseSelected(exercise)"
-            [showSelection]="true"
-            (exerciseSelected)="selectExercise($event)"
-          />
+        <app-exercise-card
+          [exercise]="exercise"
+          [isSelected]="isExerciseSelected(exercise)"
+          [showSelection]="true"
+          (exerciseSelected)="selectExercise($event)"
+        />
         }
       </div>
-    </cdk-virtual-scroll-viewport>
+    </div>
   </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <button mat-button (click)="dialogRef.close(null)">Cancel</button>
-  <button mat-stroked-button (click)="applyFiltersOnly()">Apply Filters Only</button>
-  <button 
-    mat-raised-button 
-    color="primary" 
-    (click)="applySelection()"
-    [disabled]="!selectedExercise()"
-  >
+  <button mat-raised-button color="primary" (click)="applySelection()" [disabled]="!selectedExercise()">
     Select Exercise
   </button>
 </mat-dialog-actions>

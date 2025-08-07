@@ -10,7 +10,7 @@
     <div class="form-fields">
       <!-- Image Selection Carousel -->
       <div class="image-selection-section">
-        <h3>Choose a workout image (optional)</h3>
+        <h2>Choose a workout image</h2>
         <div class="image-carousel">
           @for (image of workoutImages; track image.url) {
           <div
@@ -81,15 +81,18 @@
         </div>
         } @else {
         <div class="exercise-list">
-          <h3>Exercises in this workout</h3>
-          <ul>
-            @for (exercise of workoutForm.get('exercises')?.value; track exercise.exercise_id) {
-            <li>
-              {{ exercise.name }} - {{ exercise.sets.length }} sets @if (exercise.rest) { (Rest:
-              {{ exercise.rest }} seconds) }
-            </li>
+          <h3>Exercises in this workout ({{ exercisesLength }})</h3>
+          <div class="exercise-cards">
+            @for (workoutExercise of workoutForm.get('exercises')?.value; track workoutExercise.exercise_id) {
+            <app-exercise-card
+              [exercise]="workoutExercise.exercise"
+              [isSelected]="false"
+              [showSelection]="false"
+              [compactMode]="true"
+              (exerciseClicked)="onExerciseCardClick($event)"
+            />
             }
-          </ul>
+          </div>
         </div>
         }
 

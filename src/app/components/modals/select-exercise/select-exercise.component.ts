@@ -1,5 +1,4 @@
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -13,7 +12,14 @@ import { AppStore } from '@app/app.store';
 import { ExerciseCardComponent } from '@app/components/exercise-card/exercise-card.component';
 import { DialogMessageData } from '@app/models/dialog.model';
 import { IExerciseFilter } from '@models/exercise-filter.model';
-import { IExercise, TExerciseEquipment, TExerciseForce, TExerciseLevel, TExerciseMechanic, TExerciseMuscleGroup } from '@models/exercise.model';
+import {
+  IExercise,
+  TExerciseEquipment,
+  TExerciseForce,
+  TExerciseLevel,
+  TExerciseMechanic,
+  TExerciseMuscleGroup,
+} from '@models/exercise.model';
 
 @Component({
   selector: 'app-select-exercise',
@@ -29,7 +35,6 @@ import { IExercise, TExerciseEquipment, TExerciseForce, TExerciseLevel, TExercis
     MatInputModule,
     MatSelectModule,
     MatChipsModule,
-    ScrollingModule,
     FormsModule,
     ExerciseCardComponent,
   ],
@@ -49,58 +54,14 @@ export class SelectExerciseComponent {
   readonly muscles = signal<TExerciseMuscleGroup[]>([]);
   readonly search = signal<string>('');
   readonly sortBy = signal<string>('name');
+  readonly sortDirection = signal<'asc' | 'desc'>('asc');
 
-  readonly equipmentOptions = computed(() => [...new Set(this.exercises().map(e => e.equipment))]);
-  readonly muscleOptions = computed(() => [...new Set(this.exercises().flatMap(e => [...e.primaryMuscles, ...e.secondaryMuscles]))]);
+  readonly equipmentOptions = computed(() => [...new Set(this.exercises().map((e) => e.equipment))]);
+  readonly muscleOptions = computed(() => [
+    ...new Set(this.exercises().flatMap((e) => [...e.primaryMuscles, ...e.secondaryMuscles])),
+  ]);
 
-  readonly filteredExercises = computed(() => {
-    const exercises = this.exercises();
-    const force = this.force();
-    const level = this.level();
-    const mechanic = this.mechanic();
-    const equipment = this.equipment();
-    const muscles = this.muscles();
-    const search = this.search().toLowerCase();
-    const sortBy = this.sortBy();
-
-    let filtered = exercises;
-
-    if (force.length) {
-      filtered = filtered.filter(e => force.includes(e.force));
-    }
-
-    if (level.length) {
-      filtered = filtered.filter(e => level.includes(e.level));
-    }
-
-    if (mechanic.length) {
-      filtered = filtered.filter(e => mechanic.includes(e.mechanic));
-    }
-
-    if (equipment.length) {
-      filtered = filtered.filter(e => equipment.includes(e.equipment));
-    }
-
-    if (muscles.length) {
-      filtered = filtered.filter(e => 
-        muscles.some(m => e.primaryMuscles.includes(m) || e.secondaryMuscles.includes(m))
-      );
-    }
-
-    if (search) {
-      filtered = filtered.filter(e => e.name.toLowerCase().includes(search));
-    }
-
-    if (sortBy === 'name') {
-      filtered.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortBy === 'difficulty') {
-      const levelSortOrder: TExerciseLevel[] = ['beginner', 'intermediate', 'expert'];
-      filtered.sort((a, b) => levelSortOrder.indexOf(a.level) - levelSortOrder.indexOf(b.level));
-    }
-
-    console.log('Filtered exercises:', filtered);
-    return filtered;
-  });
+  readonly filteredExercises = computed(() => this.filterAndSortExercises());
 
   constructor() {
     // Hydrate form from current exercise filter in store
@@ -114,6 +75,78 @@ export class SelectExerciseComponent {
       this.search.set(currentFilter.search || '');
       this.sortBy.set(currentFilter.sortBy || 'name');
     }
+
+    // Keep store filter in sync with form signals
+    effect(() => {
+      const filter: IExerciseFilter = {
+        force: this.force(),
+        level: this.level(),
+        mechanic: this.mechanic(),
+        equipment: this.equipment(),
+        muscles: this.muscles(),
+        search: this.search(),
+        sortBy: this.sortBy(),
+      };
+      this.store.setExerciseFilter(filter);
+    });
+  }
+
+  private filterAndSortExercises(): IExercise[] {
+    const exercises = this.exercises();
+    const force = this.force();
+    const level = this.level();
+    const mechanic = this.mechanic();
+    const equipment = this.equipment();
+    const muscles = this.muscles();
+    const search = this.search().toLowerCase();
+    const sortBy = this.sortBy();
+    const sortDirection = this.sortDirection();
+
+    let filtered = exercises;
+
+    // Apply filters only if they have values to avoid unnecessary iterations
+    if (force.length > 0) {
+      filtered = filtered.filter((e) => force.includes(e.force));
+    }
+
+    if (level.length > 0) {
+      filtered = filtered.filter((e) => level.includes(e.level));
+    }
+
+    if (mechanic.length > 0) {
+      filtered = filtered.filter((e) => mechanic.includes(e.mechanic));
+    }
+
+    if (equipment.length > 0) {
+      filtered = filtered.filter((e) => equipment.includes(e.equipment));
+    }
+
+    if (muscles.length > 0) {
+      filtered = filtered.filter((e) =>
+        muscles.some((m) => e.primaryMuscles.includes(m) || e.secondaryMuscles.includes(m))
+      );
+    }
+
+    if (search.length > 0) {
+      filtered = filtered.filter((e) => e.name.toLowerCase().includes(search));
+    }
+
+    // Sort the results with direction
+    if (sortBy === 'name') {
+      filtered.sort((a, b) => {
+        const result = a.name.localeCompare(b.name);
+        return sortDirection === 'asc' ? result : -result;
+      });
+    } else if (sortBy === 'difficulty') {
+      const levelSortOrder: TExerciseLevel[] = ['beginner', 'intermediate', 'expert'];
+      filtered.sort((a, b) => {
+        const result = levelSortOrder.indexOf(a.level) - levelSortOrder.indexOf(b.level);
+        return sortDirection === 'asc' ? result : -result;
+      });
+    }
+
+    // Limit to first 100 results for performance
+    return filtered.slice(0, 100);
   }
 
   trackByExerciseId(_: number, exercise: IExercise): string {
@@ -131,36 +164,9 @@ export class SelectExerciseComponent {
   applySelection() {
     const selectedExercise = this.selectedExercise();
     if (selectedExercise) {
-      // Save current filter state to store
-      const filter: IExerciseFilter = {
-        force: this.force(),
-        level: this.level(),
-        mechanic: this.mechanic(),
-        equipment: this.equipment(),
-        muscles: this.muscles(),
-        search: this.search(),
-        sortBy: this.sortBy(),
-      };
-      this.store.setExerciseFilter(filter);
-      
-      // Return the selected exercise
+      // Return the selected exercise (filter is already synced via effect)
       this.dialogRef.close(selectedExercise);
     }
-  }
-
-  applyFiltersOnly() {
-    // Just save filters without selecting an exercise
-    const filter: IExerciseFilter = {
-      force: this.force(),
-      level: this.level(),
-      mechanic: this.mechanic(),
-      equipment: this.equipment(),
-      muscles: this.muscles(),
-      search: this.search(),
-      sortBy: this.sortBy(),
-    };
-    this.store.setExerciseFilter(filter);
-    this.dialogRef.close(null);
   }
 
   clearFilters() {
@@ -171,5 +177,10 @@ export class SelectExerciseComponent {
     this.muscles.set([]);
     this.search.set('');
     this.sortBy.set('name');
+    this.sortDirection.set('asc');
+  }
+
+  toggleSortDirection() {
+    this.sortDirection.update(direction => direction === 'asc' ? 'desc' : 'asc');
   }
 }

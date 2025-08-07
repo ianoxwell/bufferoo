@@ -26,8 +26,8 @@ mat-dialog-content {
   .image-selection-section {
     margin-bottom: 24px;
 
-    h3 {
-      margin: 0 0 1rem 0;
+    h2 {
+      margin: 0 0 0.5rem 0;
       font-size: 1rem;
       font-weight: 500;
       color: var(--mat-sys-on-surface);
@@ -140,6 +140,48 @@ mat-dialog-content {
     margin-top: 1rem;
     width: fit-content;
     align-self: flex-start;
+  }
+
+  .exercise-list {
+    margin-bottom: 1rem;
+
+    h3 {
+      margin: 0 0 1rem 0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--mat-sys-on-surface);
+    }
+
+    .exercise-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+
+      app-exercise-card {
+        cursor: pointer;
+        
+        &:hover {
+          transform: translateY(-0.125rem);
+        }
+      }
+    }
+  }
+
+  .no-exercises-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: var(--mat-sys-surface-variant);
+    color: var(--mat-sys-on-surface-variant);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+
+    mat-icon {
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
   }
 
   .error-message {

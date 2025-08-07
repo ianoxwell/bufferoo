@@ -23,6 +23,7 @@ export class ExerciseCardComponent {
   @Input({ required: true }) exercise!: IExercise;
   @Input() isSelected = false;
   @Input() showSelection = true;
+  @Input() compactMode = false;
   @Output() exerciseSelected = new EventEmitter<IExercise>();
   @Output() exerciseClicked = new EventEmitter<IExercise>();
 
@@ -46,5 +47,23 @@ export class ExerciseCardComponent {
     // Create optimized URL with Supabase image transformation
     // Using 240x240 for exercise cards (square for consistent layout)
     return `${environment.exerciseBucket}${imageName}?width=240&height=240&resize=cover&quality=85`;
+  }
+
+  getForceIcon(force: string): string {
+    switch (force.toLowerCase()) {
+      case 'push': return 'trending_up';
+      case 'pull': return 'trending_down';
+      case 'static': return 'pause';
+      default: return 'help_outline';
+    }
+  }
+
+  getLevelIcon(level: string): string {
+    switch (level.toLowerCase()) {
+      case 'beginner': return 'star_border';
+      case 'intermediate': return 'star_half';
+      case 'expert': return 'star';
+      default: return 'help_outline';
+    }
   }
 }

@@ -38,6 +38,20 @@ mat-dialog-content {
     justify-content: flex-end;
     margin-top: 0.5rem;
   }
+
+  .sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    mat-form-field {
+      flex: 1;
+    }
+    
+    button[mat-icon-button] {
+      margin-bottom: 1.25rem; // Align with form field baseline
+    }
+  }
 }
 
 .exercise-results {
@@ -79,16 +93,21 @@ mat-dialog-content {
     flex-grow: 1;
     min-height: 0;
     width: 100%;
+    overflow-y: auto;
 
     .exercise-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-      gap: 1rem;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
       padding: 0.5rem;
 
-      @media (max-width: 768px) {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
+      @media (min-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      @media (min-width: 1200px) {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
   }

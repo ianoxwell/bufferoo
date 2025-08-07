@@ -9,8 +9,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgOptimizedImage } from '@angular/common';
 import { AppStore } from '@app/app.store';
 import { SupabaseService } from '@app/core/supabase.service';
+import { ExerciseCardComponent } from '@app/components/exercise-card/exercise-card.component';
 import { DialogMessageData, IDialogText } from '@models/dialog.model';
 import { ISetEntry, IWorkout } from '@models/workout.model';
+import { IExercise } from '@models/exercise.model';
 import { ModalService } from '@app/core/modal-service';
 
 @Component({
@@ -25,6 +27,7 @@ import { ModalService } from '@app/core/modal-service';
     MatSlideToggleModule,
     ReactiveFormsModule,
     NgOptimizedImage,
+    ExerciseCardComponent,
   ],
   templateUrl: './create-workout-modal.html',
   styleUrl: './create-workout-modal.scss',
@@ -35,7 +38,6 @@ export class CreateWorkoutModalComponent implements OnInit {
   private readonly appStore = inject(AppStore);
   private readonly modalService = inject(ModalService);
   readonly data = inject<DialogMessageData<IDialogText>>(MAT_DIALOG_DATA);
-
 
   workoutForm!: FormGroup;
   isLoading = false;
@@ -123,16 +125,18 @@ export class CreateWorkoutModalComponent implements OnInit {
         reps: 10,
         weight: 0,
       }));
+      console.log('Selected exercise:', selectedExercise);
       exercisesArray.push(
         new FormGroup({
           exercise_id: new FormControl(selectedExercise.id, [Validators.required]),
           position: new FormControl(exercisesArray.length + 1, [Validators.required]),
           exercise: new FormControl(selectedExercise, [Validators.required]),
-          sets: new FormArray(blankSets.map(set => this.createSetFormGroup(set))),
+          sets: new FormArray(blankSets.map((set) => this.createSetFormGroup(set))),
           rest: new FormControl(60, [Validators.required]),
           // Add other fields from IWorkoutExercise as needed
         })
       );
+      console.log('new form', this.workoutForm.getRawValue());
     }
   }
 
@@ -166,5 +170,10 @@ export class CreateWorkoutModalComponent implements OnInit {
     if (imgElement.src === image.optimizedUrl) {
       imgElement.src = image.url;
     }
+  }
+
+  onExerciseCardClick(exercise: IExercise): void {
+    // TODO: Open exercise edit modal
+    console.log('Exercise card clicked:', exercise);
   }
 }

@@ -1,11 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { IExercise } from '@app/models/exercise.model';
 import { ConfirmModalComponent } from '@components/modals/confirm-modal/confirm-modal';
 import { CreateWorkoutModalComponent } from '@components/modals/create-workout-modal/create-workout-modal';
 import { ExerciseFilterComponent } from '@components/modals/exercise-filter/exercise-filter.component';
 import { EMessageStatus, ICreateDialogInput, IDialogText } from '@models/dialog.model';
-import { IExerciseFilter } from '@models/exercise-filter.model';
 import { IWorkout } from '@models/workout.model';
 import { firstValueFrom, Observable, switchMap, take, tap, timer } from 'rxjs';
 import { getAnimationDuration } from './animation';
@@ -177,7 +177,7 @@ export class ModalService {
   }
 
   /** Opens the exercise filter dialog */
-  async openExerciseFilter(): Promise<IExerciseFilter | null> {
+  async openSelectExercise(): Promise<IExercise | null> {
     const options: ICreateDialogInput<null> = {
       id: 'exerciseFilterDialog',
       data: { status: EMessageStatus.Information, title: 'Filter Exercises', isAlert: false },
@@ -188,7 +188,7 @@ export class ModalService {
       maxHeight: '100vh',
       panelClass: 'full-screen-dialog',
     };
-    return this.createDialog<IExerciseFilter | null, null>(options);
+    return this.createDialog<IExercise | null, null>(options);
   }
 
   /** Opens the create workout dialog */

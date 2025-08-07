@@ -43,7 +43,7 @@ export class ExploreComponent {
   }
 
   async onShowFilterModal() {
-    const result = await this.modalService.openExerciseFilter();
+    const result = await this.modalService.openSelectExercise();
     if (result) {
       console.log('Filter applied:', result);
       // Apply the filters

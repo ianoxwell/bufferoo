@@ -28,9 +28,14 @@
               (keydown.space)="onImageSelect(image.url)"
             >
               <img 
-                [src]="image.url" 
+                ngSrc="{{ image.optimizedUrl }}" 
                 [alt]="image.name"
+                width="150"
+                height="150"
+                priority="false"
                 loading="lazy"
+                sizes="(max-width: 768px) 25vw, 15vw"
+                (error)="onImageError($event, image)"
               />
               @if (isImageSelected(image.url)) {
                 <div class="selection-indicator">

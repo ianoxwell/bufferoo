@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NgOptimizedImage } from '@angular/common';
 import { AppStore } from '@app/app.store';
 import { SupabaseService } from '@app/core/supabase.service';
 import { DialogMessageData, IDialogText } from '@models/dialog.model';
@@ -22,6 +23,7 @@ import { IWorkout } from '@models/workout.model';
     MatInputModule,
     MatSlideToggleModule,
     ReactiveFormsModule,
+    NgOptimizedImage,
   ],
   templateUrl: './create-workout-modal.html',
   styleUrl: './create-workout-modal.scss',
@@ -36,7 +38,7 @@ export class CreateWorkoutModalComponent implements OnInit {
   workoutForm!: FormGroup;
   isLoading = false;
   errorMessage = '';
-  workoutImages: { name: string; url: string }[] = [];
+  workoutImages: { name: string; url: string; optimizedUrl: string }[] = [];
 
   async ngOnInit(): Promise<void> {
     this.workoutForm = this.createForm();
@@ -110,10 +112,19 @@ export class CreateWorkoutModalComponent implements OnInit {
   }
 
   onImageSelect(imageUrl: string): void {
+    // Store the original URL for the workout record
     this.workoutForm.patchValue({ selectedImageUrl: imageUrl });
   }
 
   isImageSelected(imageUrl: string): boolean {
     return this.workoutForm.get('selectedImageUrl')?.value === imageUrl;
+  }
+
+  onImageError(event: Event, image: { name: string; url: string; optimizedUrl: string }): void {
+    // Fallback to original URL if optimized version fails to load
+    const imgElement = event.target as HTMLImageElement;
+    if (imgElement.src === image.optimizedUrl) {
+      imgElement.src = image.url;
+    }
   }
 }

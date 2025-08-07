@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--mat-sys-outline-variant);
 
   h1 {
@@ -14,21 +14,21 @@
 }
 
 mat-dialog-content {
-  padding: 24px;
+  padding: 1.5rem;
   min-height: 200px;
   max-height: unset;
 
   .form-fields {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 0.5rem;
   }
 
   .image-selection-section {
     margin-bottom: 24px;
 
     h3 {
-      margin: 0 0 16px 0;
+      margin: 0 0 1rem 0;
       font-size: 1rem;
       font-weight: 500;
       color: var(--mat-sys-on-surface);
@@ -36,10 +36,10 @@ mat-dialog-content {
 
     .image-carousel {
       display: flex;
-      gap: 12px;
+      gap: 0.75rem;
       overflow-x: auto;
-      padding: 8px 0;
-      margin: 0 -8px;
+      padding: 0.5rem 0;
+      margin: 0 -0.5rem;
       padding: 8px;
       
       // Custom scrollbar styling
@@ -63,8 +63,8 @@ mat-dialog-content {
 
       .image-option {
         position: relative;
-        min-width: 120px;
-        height: 80px;
+        min-width: 9rem;
+        height: 6rem;
         border-radius: 8px;
         overflow: hidden;
         cursor: pointer;
@@ -92,25 +92,26 @@ mat-dialog-content {
           height: 100%;
           object-fit: cover;
           display: block;
+          border-radius: inherit;
         }
 
         .selection-indicator {
           position: absolute;
-          top: 4px;
-          right: 4px;
+          top: 0.25rem;
+          right: 0.25rem;
           background: var(--mat-sys-primary);
           border-radius: 50%;
-          width: 24px;
-          height: 24px;
+          width: 1.5rem;
+          height: 1.5rem;
           display: flex;
           align-items: center;
           justify-content: center;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
           mat-icon {
-            font-size: 16px;
-            width: 16px;
-            height: 16px;
+            font-size: 1rem;
+            width: 1rem;
+            height: 1rem;
             color: var(--mat-sys-on-primary);
           }
         }
@@ -123,10 +124,10 @@ mat-dialog-content {
   }
 
   .toggle-field {
-    margin: 16px 0;
+    margin: 1rem 0;
 
     mat-slide-toggle {
-      margin-bottom: 8px;
+      margin-bottom: 0.5rem;
     }
 
     .toggle-description {
@@ -140,17 +141,17 @@ mat-dialog-content {
   .error-message {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
     background-color: var(--mat-sys-error-container);
     color: var(--mat-sys-on-error-container);
     border-radius: 8px;
-    margin-top: 16px;
+    margin-top: 1rem;
 
     mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
     }
 
     span {
@@ -160,39 +161,39 @@ mat-dialog-content {
 }
 
 mat-dialog-actions {
-  padding: 16px 24px;
+  padding: 1rem 1.5rem;
   border-top: 1px solid var(--mat-sys-outline-variant);
-  gap: 12px;
+  gap: 0.75rem;
 
   button {
-    min-width: 80px;
+    min-width: 5rem;
   }
 }
 
 // Responsive design
 @media (max-width: 768px) {
   .dialog-header {
-    padding: 12px 16px;
-    
+    padding: 0.75rem 1rem;
+
     h1 {
       font-size: 1.125rem;
     }
   }
 
   mat-dialog-content {
-    padding: 16px;
+    padding: 1rem;
 
     .image-selection-section {
-      margin-bottom: 20px;
+      margin-bottom: 1.25rem;
 
       h3 {
         font-size: 0.9rem;
-        margin-bottom: 12px;
+        margin-bottom: 0.75rem;
       }
 
       .image-carousel {
-        gap: 8px;
-        padding: 4px;
+        gap: 0.5rem;
+        padding: 0.25rem;
         margin: 0 -4px;
 
         .image-option {
@@ -200,15 +201,15 @@ mat-dialog-actions {
           height: 70px;
 
           .selection-indicator {
-            width: 20px;
-            height: 20px;
-            top: 2px;
-            right: 2px;
+            width: 1.25rem;
+            height: 1.25rem;
+            top: 0.125rem;
+            right: 0.125rem;
 
             mat-icon {
-              font-size: 14px;
-              width: 14px;
-              height: 14px;
+              font-size: 0.875rem;
+              width: 0.875rem;
+              height: 0.875rem;
             }
           }
         }
@@ -217,7 +218,7 @@ mat-dialog-actions {
   }
 
   mat-dialog-actions {
-    padding: 12px 16px;
+    padding: 0.75rem 1rem;
     flex-direction: column-reverse;
     
     button {

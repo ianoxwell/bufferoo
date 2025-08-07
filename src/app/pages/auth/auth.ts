@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +17,7 @@ export class Auth implements OnInit {
   private readonly supabaseService = inject(SupabaseService);
   private readonly appStore = inject(AppStore);
   private readonly router = inject(Router);
+  hasSignedIn = signal(false);
   signInForm: FormGroup;
   loading = false;
 
@@ -46,7 +47,7 @@ export class Auth implements OnInit {
       const email = this.signInForm.getRawValue().email;
       const { error } = await this.supabaseService.signIn(email);
       if (error) throw error;
-      alert('Check your email for the login link!');
+      this.hasSignedIn.set(true);
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message);

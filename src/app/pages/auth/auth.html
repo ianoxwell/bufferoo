@@ -1,16 +1,56 @@
 <section class="auth-page">
   <div class="auth-container">
-    <h1>Welcome to Bufferoo</h1>
-    <p class="description">Sign in via magic link with your email below</p>
+    <h2>Welcome to Bufferoo</h2>
+    <p>Your personal workout tracker — fast, flexible, and <u>free</u>.</p>
+    <p>
+      Bufferoo is a demo app built to explore the latest in <b>Angular</b>, <b>Material UI</b>, and <b>Supabase</b> with
+      GraphQL. It’s free to use as-is, no sign-up costs or subscriptions.
+    </p>
+    <ul class="features-list">
+      <li>✅ Plan and track workouts</li>
+      <li>✅ Visualise your progress</li>
+      <li>✅ Built with modern tech, hosted on Vercel</li>
+    </ul>
+
+    <p class="description">🔐 Ready to train smarter?</p>
     <form [formGroup]="signInForm" (keyup.enter)="onSubmit()" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput required type="email" formControlName="email" placeholder="Your email" />
-        @if (signInForm.get('email')?.hasError('required') && signInForm.get('email')?.touched) {
-        <mat-error> Email is required </mat-error>
-        }
-      </mat-form-field>
-      <button type="submit" matButton="filled" [disabled]="loading">Login</button>
+      @if(!hasSignedIn()) {
+      <mat-label>Sign in via magic link with your email below</mat-label>
+      <div class="login-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput required type="email" formControlName="email" placeholder="Your email" />
+          @if (signInForm.get('email')?.hasError('required') && signInForm.get('email')?.touched) {
+          <mat-error> Email is required </mat-error>
+          }
+        </mat-form-field>
+        <button type="submit" matButton="filled" [disabled]="loading">Login</button>
+      </div>
+      } @else {
+      <div>Success!</div>
+      <h3>Check your email for the login link!</h3>
+      }
     </form>
+
+    <section class="notes-credits">
+      <p>
+        <b>Note</b>: This is a work-in-progress and part of a developer portfolio project — features may evolve over
+        time.
+      </p>
+      <h3>Credits</h3>
+      <ul>
+        <li>
+          <a href="https://github.com/yuhonas/free-exercise-db" target="_blank" rel="noopener noreferrer">
+            Free Exercise DB
+          </a>
+          - Thanks and respect to Clint for creating this awesome resource!
+        </li>
+        <li>
+          <a href="https://github.com/ianoxwell/bufferoo" target="_blank" rel="noopener noreferrer">
+            Bufferoo on GitHub
+          </a>
+        </li>
+      </ul>
+    </section>
   </div>
 </section>

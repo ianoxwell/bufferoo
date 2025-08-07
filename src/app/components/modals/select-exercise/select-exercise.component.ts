@@ -1,9 +1,7 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,8 +10,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppStore } from '@app/app.store';
+import { ExerciseCardComponent } from '@app/components/exercise-card/exercise-card.component';
 import { DialogMessageData } from '@app/models/dialog.model';
-import { environment } from '@env/environment';
 import { IExerciseFilter } from '@models/exercise-filter.model';
 import { IExercise, TExerciseEquipment, TExerciseForce, TExerciseLevel, TExerciseMechanic, TExerciseMuscleGroup } from '@models/exercise.model';
 
@@ -30,11 +28,10 @@ import { IExercise, TExerciseEquipment, TExerciseForce, TExerciseLevel, TExercis
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatCardModule,
     MatChipsModule,
     ScrollingModule,
     FormsModule,
-    NgOptimizedImage,
+    ExerciseCardComponent,
   ],
 })
 export class SelectExerciseComponent {
@@ -174,13 +171,5 @@ export class SelectExerciseComponent {
     this.muscles.set([]);
     this.search.set('');
     this.sortBy.set('name');
-  }
-
-  getOptimizedExerciseImageUrl(imageName: string): string {
-    if (!imageName) return '';
-    
-    // Create optimized URL with Supabase image transformation
-    // Using 240x240 for exercise cards (square for consistent layout)
-    return `${environment.exerciseBucket}${imageName}?width=240&height=240&resize=cover&quality=85`;
   }
 }

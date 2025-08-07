@@ -1,0 +1,56 @@
+<mat-card 
+  class="exercise-card"
+  [class.selected]="isSelected"
+  (click)="onCardClick()"
+  (keydown)="onKeyDown($event)"
+  tabindex="0"
+  [attr.aria-label]="'Select ' + exercise.name"
+>
+  @if (showSelection && isSelected) {
+    <div class="selection-indicator">
+      <mat-icon>check_circle</mat-icon>
+    </div>
+  }
+  
+  @if (exercise.images && exercise.images[0]) {
+    <img 
+      ngSrc="{{ getOptimizedExerciseImageUrl(exercise.images[0]) }}"
+      [alt]="exercise.name"
+      width="120"
+      height="120"
+      priority="false"
+      loading="lazy"
+      sizes="(max-width: 768px) 30vw, 15vw"
+      class="exercise-image"
+    />
+  } @else {
+    <div class="exercise-image-placeholder">
+      <mat-icon>fitness_center</mat-icon>
+    </div>
+  }
+  
+  <mat-card-content>
+    <h4 class="exercise-name">{{ exercise.name }}</h4>
+    <div class="exercise-meta">
+      <mat-chip-set>
+        @if (exercise.level) {
+          <mat-chip>{{ exercise.level }}</mat-chip>
+        }
+        @if (exercise.force) {
+          <mat-chip>{{ exercise.force }}</mat-chip>
+        }
+        @if (exercise.mechanic) {
+          <mat-chip>{{ exercise.mechanic }}</mat-chip>
+        }
+      </mat-chip-set>
+      <div class="exercise-details">
+        <span class="equipment">{{ exercise.equipment }}</span>
+        <span class="muscles">{{ exercise.primaryMuscles.slice(0, 2).join(', ') }}
+          @if (exercise.primaryMuscles.length > 2) {
+            <span class="more-muscles">+{{ exercise.primaryMuscles.length - 2 }} more</span>
+          }
+        </span>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

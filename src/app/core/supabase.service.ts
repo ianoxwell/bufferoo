@@ -81,19 +81,31 @@ export class SupabaseService {
     return this.supabase.storage.from('avatars').upload(filePath, file);
   }
 
-  async getWorkoutImages(): Promise<{ name: string; url: string }[]> {
+  async getWorkoutImages(): Promise<{ name: string; url: string; optimizedUrl: string }[]> {
     const { data, error } = await this.supabase.storage.from('workout-images').list();
     if (error) {
       console.error('Error fetching workout images:', error);
       return [];
     }
-    return data.map((item) => ({ name: item.name, url: `${environment.workoutBucket}${item.name}` }));
+    
+    return data.map((item) => {
+      const baseUrl = `${environment.workoutBucket}${item.name}`;
+      // Create optimized URL with Supabase image transformation
+      // Using square 300x300 to handle various source aspect ratios consistently
+      const optimizedUrl = `${baseUrl}?width=300&height=300&resize=cover&quality=85`;
+
+      return {
+        name: item.name,
+        url: baseUrl, // Keep original for fallback
+        optimizedUrl 
+      };
+    });
   }
 
   async getPublicWorkouts(): Promise<IWorkout[]> {
     const { data, error } = await this.supabase
       .from('workouts')
-      .select('*, workout_exercises(*, exercise:exercises(*))');
+      .select('*, exercises:workout_exercises(*, exercise:exercises(*))');
     if (error) {
       console.error('Error fetching public workouts:', error);
       return [];
@@ -122,7 +134,7 @@ export class SupabaseService {
     const workout_id = workoutData.id;
 
     // Step 2: Prepare workout_exercises with the new workout ID
-    const workoutExercises = workout.workout_exercises.map((ex, index) => ({
+    const workoutExercises = workout.exercises.map((ex, index) => ({
       workout_id,
       exercise_id: ex.exercise_id,
       position: ex.position ?? index,

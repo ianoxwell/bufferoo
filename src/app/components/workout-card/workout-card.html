@@ -1,6 +1,18 @@
-<div class="workout-card" [style.background-image]="'url(' + workout.image_url + ')'">
+<div class="workout-card">
+  @if (workout.image_url) {
+    <img 
+      ngSrc="{{ getOptimizedImageUrl(workout.image_url) }}" 
+      [alt]="workout.name + ' workout'"
+      width="200"
+      height="150"
+      priority="false"
+      loading="lazy"
+      sizes="(max-width: 768px) 50vw, 25vw"
+      class="workout-image"
+    />
+  }
   <div class="workout-card-content">
     <h3>{{ workout.name }}</h3>
-    <p>{{ workout.workout_exercises.length }} activities</p>
+    <p>{{ workout.exercises.length }} activities</p>
   </div>
 </div>

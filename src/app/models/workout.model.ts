@@ -8,7 +8,7 @@ export interface IWorkout {
   is_public: boolean;
   user_id?: string;
   created_at?: string;
-  workout_exercises: IWorkoutExercise[];
+  exercises: IWorkoutExercise[];
 }
 
 export interface IWorkoutExercise {
@@ -29,7 +29,7 @@ export const exampleWorkout: IWorkout = {
     name: "Upper body",
     image_url: "https://mimaktxujtbngbncgwqn.supabase.co/storage/v1/object/public/workout-images//senior-strength-training-stockcake.jpg",
     is_public: true,
-    workout_exercises: [
+    exercises: [
         {
             exercise_id: "ccfbe80b-ac09-4f13-bee6-c2da89be38d6",
             position: 1,
